@@ -1,0 +1,748 @@
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #f5f3f0 0%, #ede9e4 100%);
+        color: #2c2c2c;
+        line-height: 1.6;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(44, 44, 44, 0.08);
+        overflow: hidden;
+    }
+
+    .header {
+        background: linear-gradient(135deg, #203a4d 0%, #1a2f3f 100%);
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+    }
+
+    .header h1 {
+        font-size: 2.2em;
+        font-weight: 600;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+    }
+
+    .header p {
+        font-size: 1.1em;
+        opacity: 0.95;
+        font-weight: 300;
+    }
+
+    .cosmic-badge {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 8px 16px;
+        border-radius: 20px;
+        margin-top: 12px;
+        font-size: 0.95em;
+        font-weight: 500;
+    }
+
+    .intensity-marker {
+        background: rgba(220, 53, 69, 0.15);
+        border: 2px solid #dc3545;
+        border-radius: 12px;
+        padding: 20px 30px;
+        margin: 30px;
+        text-align: center;
+    }
+
+    .intensity-label {
+        font-size: 0.85em;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #dc3545;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .intensity-text {
+        font-size: 1.3em;
+        color: #3c3c3c;
+        font-weight: 600;
+    }
+
+    .intensity-description {
+        font-size: 0.95em;
+        color: #5a5a5a;
+        margin-top: 12px;
+        font-style: italic;
+    }
+
+    .tabs {
+        display: flex;
+        border-bottom: 2px solid #e8e4df;
+        background: #fafaf8;
+    }
+
+    .tab-btn {
+        flex: 1;
+        padding: 18px 20px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: 500;
+        color: #203a4d;
+        transition: all 0.3s ease;
+        position: relative;
+        text-align: center;
+    }
+
+    .tab-btn:hover {
+        background: rgba(32, 58, 77, 0.05);
+        color: #3c3c3c;
+    }
+
+    .tab-btn.active {
+        color: #203a4d;
+        border-bottom: 3px solid #203a4d;
+        margin-bottom: -2px;
+    }
+
+    .tab-content {
+        display: none;
+        padding: 40px 30px;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-title {
+        font-size: 1.4em;
+        font-weight: 600;
+        color: #3c3c3c;
+        margin-bottom: 24px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #e8e4df;
+    }
+
+    .rising-sign-selector {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+        margin-bottom: 30px;
+    }
+
+    .sign-btn {
+        padding: 12px 16px;
+        border: 2px solid #d4ccc4;
+        background: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        color: #203a4d;
+        transition: all 0.3s ease;
+        font-size: 0.95em;
+    }
+
+    .sign-btn:hover {
+        border-color: #203a4d;
+        background: rgba(32, 58, 77, 0.05);
+    }
+
+    .sign-btn.active {
+        background: #203a4d;
+        color: white;
+        border-color: #203a4d;
+    }
+
+    .house-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        margin-bottom: 30px;
+    }
+
+    .house-card {
+        background: linear-gradient(135deg, #fafaf8 0%, #f3f0ed 100%);
+        border: 1px solid #e8e4df;
+        border-radius: 12px;
+        padding: 24px;
+        transition: all 0.3s ease;
+    }
+
+    .house-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(44, 44, 44, 0.08);
+        border-color: #203a4d;
+    }
+
+    .house-header {
+        font-size: 1.1em;
+        font-weight: 600;
+        color: #203a4d;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .house-content {
+        font-size: 0.95em;
+        color: #4a4a4a;
+        line-height: 1.7;
+    }
+
+    .keywords {
+        background: white;
+        padding: 12px 16px;
+        border-left: 3px solid #203a4d;
+        margin-top: 12px;
+        border-radius: 4px;
+        font-size: 0.9em;
+        color: #5a5a5a;
+        font-weight: 500;
+    }
+
+    .ceo-plan {
+        background: linear-gradient(135deg, #fafaf8 0%, #f3f0ed 100%);
+        border: 1px solid #e8e4df;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+
+    .ceo-plan-title {
+        font-size: 1.15em;
+        font-weight: 600;
+        color: #203a4d;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .ceo-do {
+        background: rgba(32, 58, 77, 0.08);
+        padding: 16px;
+        border-left: 3px solid #203a4d;
+        border-radius: 4px;
+        margin-bottom: 16px;
+    }
+
+    .ceo-avoid {
+        background: rgba(220, 53, 69, 0.08);
+        padding: 16px;
+        border-left: 3px solid #dc3545;
+        border-radius: 4px;
+        margin-bottom: 16px;
+    }
+
+    .ceo-label {
+        font-weight: 600;
+        font-size: 0.85em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+        color: #203a4d;
+    }
+
+    .daily-guide {
+        display: grid;
+        gap: 20px;
+    }
+
+    .day-card {
+        border: 1px solid #e8e4df;
+        border-radius: 12px;
+        padding: 24px;
+        background: white;
+        transition: all 0.3s ease;
+    }
+
+    .day-card:hover {
+        border-color: #203a4d;
+        box-shadow: 0 4px 12px rgba(32, 58, 77, 0.1);
+    }
+
+    .day-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #e8e4df;
+    }
+
+    .day-date {
+        font-size: 1.3em;
+        font-weight: 600;
+        color: #203a4d;
+    }
+
+    .day-planet {
+        font-size: 1.8em;
+        opacity: 0.7;
+    }
+
+    .day-transit {
+        font-size: 0.95em;
+        font-weight: 500;
+        color: #203a4d;
+        flex-grow: 1;
+    }
+
+    .day-content {
+        color: #4a4a4a;
+        line-height: 1.8;
+    }
+
+    .day-content p {
+        margin-bottom: 12px;
+    }
+
+    .day-insight {
+        background: rgba(32, 58, 77, 0.05);
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-top: 12px;
+        font-size: 0.95em;
+        font-style: italic;
+        color: #5a5a5a;
+    }
+
+    .ceo-commitment {
+        background: linear-gradient(135deg, #fafaf8 0%, #f3f0ed 100%);
+        border: 2px solid #203a4d;
+        border-radius: 12px;
+        padding: 24px;
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .commitment-label {
+        font-size: 0.85em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #203a4d;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+    .commitment-text {
+        font-size: 1.1em;
+        color: #3c3c3c;
+        font-weight: 500;
+        line-height: 1.6;
+    }
+
+    .footer {
+        background: #fafaf8;
+        padding: 24px 30px;
+        border-top: 1px solid #e8e4df;
+        text-align: center;
+        font-size: 0.9em;
+        color: #888;
+    }
+
+    .note {
+        background: rgba(32, 58, 77, 0.05);
+        padding: 16px;
+        border-left: 3px solid #203a4d;
+        border-radius: 4px;
+        margin: 20px 0;
+        font-size: 0.95em;
+        color: #5a5a5a;
+    }
+
+    .transit-dates {
+        background: white;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 3px solid #a68e45;
+        font-size: 0.95em;
+    }
+
+    .transit-date-item {
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #203a4d;
+    }
+
+    .transit-date-item:last-child {
+        margin-bottom: 0;
+    }
+</style>
+
+<div class="container">
+    <div class="header">
+        <h1>🌙 AstroAssistant</h1>
+        <p>Your Cosmic Intelligence for the Week of April 13 – 19, 2026</p>
+        <div class="cosmic-badge">Waning Crescent in Pisces → Aries | New Moon in Aries (April 17) | Major Activation Week</div>
+    </div>
+
+    <div class="intensity-marker">
+        <div class="intensity-label">⚡ Cosmic Intensity This Week</div>
+        <div class="intensity-text">HIGH (7/10)</div>
+        <div class="intensity-description">Mercury moves into Aries. Major Sun-Chiron conjunction. Multiple moon aspects. New Moon in Aries activates the zodiac cycle. This is a high-energy, transformational week with deep shadow work and courageous new beginnings.</div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="houses">Houses & Activation</button>
+        <button class="tab-btn" data-tab="ceo">CEO Plan</button>
+        <button class="tab-btn" data-tab="daily">Daily Guide</button>
+    </div>
+
+    <!-- HOUSES & ACTIVATION TAB -->
+    <div id="houses" class="tab-content active">
+        <div class="section-title">Houses Activated This Week</div>
+
+        <div class="note">
+            <strong>Rising Sign Selection:</strong> Choose your Rising Sign (Ascendant) to see which houses are activated by this week's transits. The New Moon in Aries on Friday is a major reset point—Mercury in Aries all week brings communication and clarity to these themes.
+        </div>
+
+        <div class="rising-sign-selector" id="signSelector">
+            <button class="sign-btn" data-sign="Aries">♈ Aries Rising</button>
+            <button class="sign-btn" data-sign="Taurus">♉ Taurus Rising</button>
+            <button class="sign-btn" data-sign="Gemini">♊ Gemini Rising</button>
+            <button class="sign-btn" data-sign="Cancer">♋ Cancer Rising</button>
+            <button class="sign-btn" data-sign="Leo">♌ Leo Rising</button>
+            <button class="sign-btn" data-sign="Virgo">♍ Virgo Rising</button>
+            <button class="sign-btn" data-sign="Libra">♎ Libra Rising</button>
+            <button class="sign-btn" data-sign="Scorpio">♏ Scorpio Rising</button>
+            <button class="sign-btn" data-sign="Sagittarius">♐ Sagittarius Rising</button>
+            <button class="sign-btn" data-sign="Capricorn">♑ Capricorn Rising</button>
+            <button class="sign-btn" data-sign="Aquarius">♒ Aquarius Rising</button>
+            <button class="sign-btn" data-sign="Pisces">♓ Pisces Rising</button>
+        </div>
+
+        <div class="transit-dates">
+            <div class="transit-date-item">☿ <strong>April 14 – May 2:</strong> Mercury enters Aries – Bold thinking. Clear communication. Decisive action. You know what you want and you say it.</div>
+            <div class="transit-date-item">☿∗♅ <strong>April 13-15:</strong> Mercury Sextile Uranus – Brilliant ideas. Trends. Industry insight. You're 10 steps ahead.</div>
+            <div class="transit-date-item">☾△♃ <strong>April 14:</strong> Moon Trine Jupiter – Uplifting. Connected. Faith restored. Things flow.</div>
+            <div class="transit-date-item">♂∗♇ <strong>April 15-17:</strong> Mars Sextile Pluto – Intensity. Power. Creative drive. Use it for transformation.</div>
+            <div class="transit-date-item">☉☌♃ <strong>April 15-17:</strong> Sun Conjunct Chiron – Share your wounds. Your journey inspires others. Vulnerability = power.</div>
+            <div class="transit-date-item">☿☌♆ <strong>April 16-17:</strong> Mercury Conjunct Neptune – Intuitive genius OR confusion. Channel toward creativity. Protect boundaries.</div>
+            <div class="transit-date-item">🌑 <strong>April 17 at 1:51 PM:</strong> New Moon in Aries – NEW CYCLE BEGINS. Fresh start. Individuality. Courage. Rebirth.</div>
+        </div>
+
+        <div id="housesContent" class="house-grid">
+            <!-- JavaScript populates this based on Rising Sign selection -->
+        </div>
+    </div>
+
+    <!-- CEO PLAN TAB -->
+    <div id="ceo" class="tab-content">
+        <div class="section-title">CEO Plan: April 13–19</div>
+
+        <div class="ceo-plan">
+            <div class="ceo-plan-title">📊 The Cosmic Forecast for Your Leadership</div>
+            <p style="margin-bottom: 20px; color: #5a5a5a;">
+                This is a week of <strong>shadow work and new birth.</strong> The New Moon in Aries on Friday is a cosmic restart—the beginning of the astrological year. But before you launch into new territory, this week asks you to face what needs healing (Sun-Chiron), to get clear on what you actually want (Mercury in Aries), and to pour intense creative power into your vision (Mars-Pluto).
+            </p>
+            <p style="color: #5a5a5a;">
+                This is not a week to play it safe. It's a week to be honest about your wounds, bold in your communication, and unafraid of your own power.
+            </p>
+        </div>
+
+        <div class="ceo-plan">
+            <div class="ceo-plan-title">✅ DO This Week (Aligned Actions)</div>
+            <div class="ceo-do">
+                <div class="ceo-label">Share Your Real Story (April 15-17)</div>
+                <p>Sun Conjunct Chiron asks you to be vulnerable. Your wounds, your journey, your struggle—these are your greatest teaching tools. Tell the truth about who you've become. Your people need to see your humanity.</p>
+            </div>
+            <div class="ceo-do">
+                <div class="ceo-label">Communicate With Courage (April 14+)</div>
+                <p>Mercury in Aries is here all month. Say what you've been afraid to say. Be direct. Be bold. What do you actually want? Who are you without others' expectations? Speak it.</p>
+            </div>
+            <div class="ceo-do">
+                <div class="ceo-label">Pour Power Into Your Vision (April 15-17)</div>
+                <p>Mars Sextile Pluto brings intensity and creative drive. This is NOT the time to hold back. Channel this power into your most important projects. Creative pursuits. Transformation. Use your power consciously.</p>
+            </div>
+            <div class="ceo-do">
+                <div class="ceo-label">Plant Seeds of Something New (April 17)</div>
+                <p>The New Moon in Aries on Friday is a cosmic reset. What are you ready to begin? Not from obligation. From truth. From desire. From who you really are. Plant that seed consciously.</p>
+            </div>
+            <div class="ceo-do">
+                <div class="ceo-label">Tune Into Your Intuition (April 16-17)</div>
+                <p>Mercury-Neptune can bring confusion OR genius. The key: meditate, dream, journal. Let your subconscious speak. Your intuition is smarter than your logic right now. Listen to it.</p>
+            </div>
+        </div>
+
+        <div class="ceo-plan">
+            <div class="ceo-plan-title">⚠️ AVOID or Navigate Carefully</div>
+            <div class="ceo-avoid">
+                <div class="ceo-label">Don't Use Your Power to Harm</div>
+                <p>Mars-Pluto is intense. You have power. But using it to dominate, control, or attack others will backfire. Channel it inward—into your creation, not destruction.</p>
+            </div>
+            <div class="ceo-avoid">
+                <div class="ceo-label">Don't Confuse Intuition With Delusion</div>
+                <p>Mercury-Neptune can blur reality. Get a reality check. Especially for big commitments or deals. Your intuition is smart, but verify the facts before signing anything.</p>
+            </div>
+            <div class="ceo-avoid">
+                <div class="ceo-label">Don't Stay Stuck in Old Stories</div>
+                <p>Yes, share your wounds. But don't use them as an excuse to stay small. The New Moon asks you to MOVE FORWARD. Past is prologue, not prison.</p>
+            </div>
+            <div class="ceo-avoid">
+                <div class="ceo-label">Don't Force the New</div>
+                <p>New Moons plant seeds. You don't dig them up every day to see if they're growing. Plant consciously and then LET IT GROW. Trust the process.</p>
+            </div>
+        </div>
+
+        <div class="ceo-commitment">
+            <div class="commitment-label">Your One CEO Commitment This Week</div>
+            <div class="commitment-text">
+                "I will face what needs healing in me. I will speak my truth with courage. I will pour my power into what matters. And on Friday, I will plant a new seed aligned with who I'm becoming—not who I've been. I am the CEO of this rebirth."
+            </div>
+        </div>
+    </div>
+
+    <!-- DAILY GUIDE TAB -->
+    <div id="daily" class="tab-content">
+        <div class="section-title">Day-by-Day Breakdown (April 13 – 19)</div>
+
+        <div class="daily-guide">
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-date">Sunday, April 13</div>
+                    <div class="day-planet">☿</div>
+                    <div class="day-transit">Mercury Sextile Uranus begins (continues until April 15)</div>
+                </div>
+                <div class="day-content">
+                    <p><strong>Theme: Brilliant Ideas. Breakthroughs. Industry Insight.</strong></p>
+                    <p>Mercury (mind, communication) in harmonious angle to Uranus (innovation, trends). You're in a state of heightened awareness. Ideas come suddenly. You see patterns others miss. Pay attention to what catches your interest—it's not random. It's relevant.</p>
+                    <p><strong>CEO Translation:</strong> This is a good day for strategy meetings, brainstorming, industry analysis. Your mind is 10 steps ahead. Document your insights.</p>
+                    <div class="day-insight">💡 What idea has been waiting for your attention? Pay attention to it today.</div>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-date">Monday, April 14</div>
+                    <div class="day-planet">☿ ☾</div>
+                    <div class="day-transit">Mercury enters Aries + Moon Trine Jupiter + Moon Sextile Venus</div>
+                </div>
+                <div class="day-content">
+                    <p><strong>Theme: Clarity + Courage + Connection.</strong></p>
+                    <p>THREE things happen today. Mercury moves into Aries—communication becomes bold, direct, courageous. You know what you want and you're not hiding it anymore. Moon Trine Jupiter brings uplifting, connected energy. Things flow. Moon Sextile Venus brings heart-opening—relationships deepen with ease.</p>
+                    <p><strong>CEO Translation:</strong> A MAJOR DAY. Say what you've been afraid to say. Have the conversation. Make the ask. Pitch the idea. People are more receptive than you think. Heart and mind are aligned.</p>
+                    <div class="day-insight">💡 This is your green light. Move.</div>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-date">Tuesday, April 15</div>
+                    <div class="day-planet">☉ ♂</div>
+                    <div class="day-transit">Sun Conjunct Chiron + Mars Sextile Pluto + 8 moon aspects</div>
+                </div>
+                <div class="day-content">
+                    <p><strong>Theme: Shadow Work + Creative Power. The Healer Within. Transformation.</strong></p>
+                    <p>This is the most active day of the week. Sun Conjunct Chiron illuminates your wounds—the things that have shaped you, broken you, taught you. This is POWERFUL medicine. You're meant to share this. Mars Sextile Pluto brings intense creative energy. You have power. The moon does 8 aspects today—emotional depths open, connections deepen, inner work activates.</p>
+                    <p><strong>CEO Translation:</strong> Journal. Meditate. Do inner work. Share your story authentically. Create from the depths. Don't hold back. This is a day for truth and transformation.</p>
+                    <div class="day-insight">💡 Your wounds are your wisdom. Your truth is your medicine. Share it.</div>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-date">Wednesday, April 16</div>
+                    <div class="day-planet">☿ ☾</div>
+                    <div class="day-transit">Mercury Conjunct Neptune begins + Moon Square Jupiter</div>
+                </div>
+                <div class="day-content">
+                    <p><strong>Theme: Intuition OR Confusion. Dreaming Big. Trust Your Gut.</strong></p>
+                    <p>Mercury meets Neptune—the meeting of mind and spirit. Your intuition is heightened. You receive downloads, insights, creative breakthroughs. BUT—this can also bring confusion, miscommunication, or people not understanding you. Moon Square Jupiter brings restless creative energy and idealistic impulses.</p>
+                    <p><strong>CEO Translation:</strong> Trust your intuition, but verify the facts. Meditate, dream, create. But before committing to anything big, get a second opinion. Your gut is smart—but make sure it's gut wisdom, not delusion.</p>
+                    <div class="day-insight">💡 Your spiritual downloads are real. Your doubt is also real. Both matter.</div>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-date">Thursday, April 17</div>
+                    <div class="day-planet">🌑 ☿</div>
+                    <div class="day-transit">New Moon in Aries at 1:51 PM CET — MAJOR RESET</div>
+                </div>
+                <div class="day-content">
+                    <p><strong>Theme: New Beginning. Rebirth. Individuality. Courage.</strong></p>
+                    <p>THE NEW MOON IN ARIES marks the beginning of the astrological year. This is a cosmic restart. Everything you've learned, felt, and processed this past lunar cycle comes to a head NOW. You plant seeds of something new. Not from fear. From truth. From desire. From who you're actually becoming.</p>
+                    <p>Mercury-Neptune is still active—your intuition is your guide. But this New Moon wants action, courage, individuality. You're meant to be SEEN. To stand for something. To claim yourself.</p>
+                    <p><strong>CEO Translation:</strong> Set an intention for the next lunar cycle. But make it PERSONAL. Not what others want. What YOU want. What fires you up when no one's watching. Plant that seed consciously. Then trust the growth.</p>
+                    <div class="day-insight">💡 A new chapter begins today. You're ready.</div>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-date">Friday, April 18</div>
+                    <div class="day-planet">☿</div>
+                    <div class="day-transit">Mercury Sextile Pluto begins (continues until April 19)</div>
+                </div>
+                <div class="day-content">
+                    <p><strong>Theme: Strategic Thinking. Depth Analysis. Mastery.</strong></p>
+                    <p>Mercury meets Pluto with harmony—your detective mind is activated. You understand human behavior, patterns, desires. You see beneath the surface. This is perfect for strategy, analysis, and creating offerings that transform people.</p>
+                    <p><strong>CEO Translation:</strong> This is good energy for creating your next offer, analyzing your audience, strategic planning. You understand what people really need (not what they say they need). Use that insight.</p>
+                    <div class="day-insight">💡 You know your people better than they know themselves. Trust that knowledge.</div>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-date">Saturday, April 19</div>
+                    <div class="day-planet">☿</div>
+                    <div class="day-transit">Mercury Sextile Pluto continues + Integration day</div>
+                </div>
+                <div class="day-content">
+                    <p><strong>Theme: Integration. Grounding. New Roots.</strong></p>
+                    <p>The week's intensity begins to settle. You've planted the New Moon seed. You've done the inner work. Now root it. The Mercury-Pluto energy is still active—keep analyzing, strategizing, refining.</p>
+                    <p><strong>CEO Translation:</strong> Take action on what you discovered this week. Ground the new intention. Work your strategy. The cosmic energy is supporting you to build something real and lasting.</p>
+                    <div class="day-insight">💡 The seed is planted. Now you tend it.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>🌙 <strong>The Cozy Astro HQ</strong> | Premium AstroAssistant for Architect Members</p>
+        <p style="margin-top: 12px;">Source of Truth: Moonsight Digital Calendar | Transits Verified</p>
+        <p style="margin-top: 12px; font-size: 0.85em; opacity: 0.7;">This is cosmic intelligence for strategic living—not fortune-telling. You are always the CEO of your choices. The map is only useful if you know where you're standing. Calm is not passive. It's the most powerful place to lead from.</p>
+    </div>
+</div>
+
+<script>
+    var houseData = {
+        "Aries": {
+            "1st House (Self, Identity, New Beginnings)": {
+                main: "Mercury enters Aries here—YOU are the focus. New Moon in Aries activates your personal rebirth. This is YOUR cycle. Identity, appearance, self-expression, and courage get amplified. This is your power week to become who you're meant to be.",
+                keywords: "Personal power, identity, courage, new cycle, individuality, self-expression"
+            }
+        },
+        "Taurus": {
+            "12th House (Spirituality, Behind Scenes, Rest)": {
+                main: "Mercury in Aries activates your 12th—spiritual communication, intuitive downloads, behind-the-scenes work. New Moon in Aries here asks: What are you releasing? What old version of yourself are you ready to leave behind? Dreams and meditation are your allies.",
+                keywords: "Spirituality, inner work, dreams, retreat, release, intuition"
+            }
+        },
+        "Gemini": {
+            "11th House (Community, Groups, Friendships)": {
+                main: "Mercury in Aries energizes your community zone. New Moon in Aries here brings new collaborations, group projects, and friendships. Your voice in community becomes BOLD. Groups you're part of want to hear from you. New beginnings in community engagement.",
+                keywords: "Community, collaboration, friendship, group projects, social courage"
+            }
+        },
+        "Cancer": {
+            "10th House (Career, Public Image, Authority)": {
+                main: "Mercury in Aries activates your career and public presence. New Moon in Aries here is POWERFUL for launches, visibility, authority. Your professional voice gets bolder. Career moves accelerate. This is your time to be SEEN.",
+                keywords: "Career, visibility, leadership, professional boldness, public authority"
+            }
+        },
+        "Leo": {
+            "9th House (Learning, Travel, Philosophy)": {
+                main: "Mercury in Aries energizes learning and expansion. New Moon in Aries here asks you to expand your worldview. Travel calls. New knowledge ignites. You're ready to level up intellectually and philosophically. Adventure awaits.",
+                keywords: "Learning, travel, wisdom, expansion, philosophy, adventure"
+            }
+        },
+        "Virgo": {
+            "8th House (Shared Resources, Intimacy, Depth)": {
+                main: "Mercury in Aries brings boldness to shared resources and intimacy. New Moon in Aries here activates depth conversations. Financial partnerships evolve. Intimacy becomes more courageous. This is about going DEEPER in shared matters.",
+                keywords: "Shared finances, intimacy, depth, honesty, transformation"
+            }
+        },
+        "Libra": {
+            "7th House (Partnerships, Contracts, 1:1)": {
+                main: "Mercury in Aries brings BOLD communication to relationships. New Moon in Aries here activates new partnerships or major shifts in existing ones. You're direct about what you need. Contracts get signed. New relationship cycles begin.",
+                keywords: "Partnerships, authenticity, contracts, new relationships, honest communication"
+            }
+        },
+        "Scorpio": {
+            "6th House (Work, Health, Daily Practice)": {
+                main: "Mercury in Aries energizes your work zone. New Moon in Aries here brings new projects, workflows, and health practices. You're ready to implement. Routines transform. Work becomes more aligned with who you are.",
+                keywords: "Work, health, daily practice, implementation, optimization, routines"
+            }
+        },
+        "Sagittarius": {
+            "5th House (Creativity, Romance, Joy)": {
+                main: "Mercury in Aries ignites creativity and romance. New Moon in Aries here activates creative breakthroughs and romantic courage. What you love gets BOLD expression. Creative projects launch. Romance becomes alive. This is YOUR joy week.",
+                keywords: "Creativity, romance, joy, creative expression, pleasure, passion"
+            }
+        },
+        "Capricorn": {
+            "4th House (Home, Family, Foundations)": {
+                main: "Mercury in Aries brings bold communication to family. New Moon in Aries here activates home matters and family shifts. New foundations begin. Honest family conversations happen. You're ready to claim your space at home.",
+                keywords: "Home, family, foundations, belonging, honest dialogue"
+            }
+        },
+        "Aquarius": {
+            "3rd House (Communication, Ideas, Siblings)": {
+                main: "Mercury in Aries energizes your communication zone—YOUR HOME sign. New Moon in Aries here amplifies YOUR VOICE. Ideas flow boldly. Writing, speaking, teaching get activated. Siblings or local community matter. You're heard.",
+                keywords: "Communication, ideas, voice, writing, teaching, local influence"
+            }
+        },
+        "Pisces": {
+            "2nd House (Money, Possessions, Values)": {
+                main: "Mercury in Aries brings boldness to your finances and self-worth. New Moon in Aries here activates money matters and resource management. You're ready to invest in yourself. Your worth becomes CLEAR. Financial courage emerges.",
+                keywords: "Money, values, self-worth, resources, financial courage"
+            }
+        }
+    };
+
+    var tabButtons = document.querySelectorAll('.tab-btn');
+    var tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var tabName = this.getAttribute('data-tab');
+            
+            tabButtons.forEach(function(btn) { btn.classList.remove('active'); });
+            tabContents.forEach(function(content) { content.classList.remove('active'); });
+            
+            this.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        });
+    });
+
+    var signButtons = document.querySelectorAll('.sign-btn');
+    var housesContent = document.getElementById('housesContent');
+
+    function populateHouses(sign) {
+        housesContent.innerHTML = '';
+        var houses = houseData[sign];
+        
+        for (var houseName in houses) {
+            if (houses.hasOwnProperty(houseName)) {
+                var houseInfo = houses[houseName];
+                var card = document.createElement('div');
+                card.className = 'house-card';
+                card.innerHTML = '<div class="house-header">' + houseName + '</div><div class="house-content">' + houseInfo.main + '</div><div class="keywords"><strong>Keywords:</strong> ' + houseInfo.keywords + '</div>';
+                housesContent.appendChild(card);
+            }
+        }
+    }
+
+    populateHouses('Pisces');
+    document.querySelector('[data-sign="Pisces"]').classList.add('active');
+
+    signButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var sign = this.getAttribute('data-sign');
+            
+            signButtons.forEach(function(btn) { btn.classList.remove('active'); });
+            this.classList.add('active');
+            
+            populateHouses(sign);
+        });
+    });
+</script>
