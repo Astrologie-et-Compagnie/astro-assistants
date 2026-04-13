@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cozy Moon Sanctuary</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #0d0d1a;
+      color: white;
+      font-family: Georgia, serif;
+    }
+
+    /* LOADING OVERLAY */
+    #loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: #0d0d1a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      transition: opacity 0.6s ease;
+    }
+    #loading-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .loading-moon {
+      font-size: 48px;
+      animation: pulse 1.6s ease-in-out infinite;
+      margin-bottom: 16px;
+    }
+    .loading-text {
+      font-family: sans-serif;
+      font-size: 12px;
+      letter-spacing: 3px;
+      opacity: 0.5;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; transform: scale(0.95); }
+      50% { opacity: 1; transform: scale(1.05); }
+    }
+
+    /* LIVE BADGE */
+    #live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-family: sans-serif;
+      font-size: 11px;
+      letter-spacing: 2px;
+      opacity: 0.8;
+      margin-bottom: 20px;
+    }
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #34d399;
+      animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* HEADER */
+    #header {
+      padding: 48px 24px;
+      text-align: center;
+      transition: background 0.6s ease;
+    }
+    #header-inner { max-width: 700px; margin: 0 auto; }
+
+    .title-label {
+      font-size: 14px;
+      opacity: 0.6;
+      letter-spacing: 3px;
+      margin-bottom: 8px;
+      font-family: sans-serif;
+    }
+    .title-sub {
+      font-size: 11px;
+      opacity: 0.4;
+      margin-bottom: 32px;
+      font-family: sans-serif;
+    }
+
+    /* SELECTORS */
+    .selector-label {
+      font-size: 11px;
+      opacity: 0.5;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      font-family: sans-serif;
+    }
+    .phase-buttons {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .phase-btn {
+      padding: 10px 20px;
+      border-radius: 100px;
+      border: 2px solid rgba(255,255,255,0.15);
+      background: transparent;
+      color: white;
+      cursor: pointer;
+      font-family: sans-serif;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    .phase-btn.active { font-weight: bold; }
+
+    .sign-selector-wrap { margin-bottom: 40px; }
+    #sign-select {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      padding: 12px 24px;
+      color: white;
+      font-size: 16px;
+      font-family: Georgia, serif;
+      cursor: pointer;
+      min-width: 200px;
+    }
+
+    /* PHASE DISPLAY */
+    .phase-display {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 32px;
+    }
+    .phase-display-label {
+      font-size: 13px;
+      opacity: 0.6;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+      font-family: sans-serif;
+    }
+    #phase-title { font-size: 36px; font-weight: 300; margin-bottom: 8px; }
+    #phase-subtitle { font-size: 18px; opacity: 0.7; margin-bottom: 12px; }
+    #phase-theme { font-size: 13px; letter-spacing: 2px; font-family: sans-serif; }
+
+    /* ILLUMINATION BAR */
+    #illum-bar-wrap {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-family: sans-serif;
+      font-size: 12px;
+      opacity: 0.6;
+    }
+    #illum-bar-track {
+      width: 140px;
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+    #illum-bar-fill {
+      height: 100%;
+      border-radius: 100px;
+      transition: width 0.8s ease;
+    }
+
+    /* TABS */
+    #tabs-bar {
+      background: rgba(0,0,0,0.4);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    #tabs-inner {
+      max-width: 700px;
+      margin: 0 auto;
+      display: flex;
+      gap: 4px;
+      padding: 16px 24px;
+    }
+    .tab-btn {
+      padding: 8px 20px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,0.6);
+      cursor: pointer;
+      font-family: sans-serif;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      background: rgba(255,255,255,0.15);
+      color: white;
+      font-weight: bold;
+    }
+
+    /* CONTENT */
+    #content { max-width: 700px; margin: 0 auto; padding: 40px 24px; }
+
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+    .card-accent { border-radius: 16px; padding: 28px; margin-bottom: 24px; }
+    .card-label {
+      font-size: 11px;
+      opacity: 0.5;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+      font-family: sans-serif;
+      display: block;
+    }
+    .card-body { font-size: 18px; line-height: 1.8; opacity: 0.9; }
+    .archetype-name { font-size: 28px; margin-bottom: 8px; }
+    .archetype-sub { font-size: 14px; opacity: 0.6; font-family: sans-serif; }
+
+    /* RITUAL */
+    .ritual-name { font-size: 28px; font-weight: 300; margin-bottom: 24px; }
+    .ritual-meta { display: flex; gap: 24px; margin-bottom: 32px; flex-wrap: wrap; }
+    .ritual-meta span { font-family: sans-serif; font-size: 13px; opacity: 0.7; }
+    .step-list { list-style: none; }
+    .step-item { display: flex; gap: 16px; margin-bottom: 16px; align-items: flex-start; }
+    .step-num { font-family: sans-serif; font-size: 14px; min-width: 24px; padding-top: 2px; }
+    .step-text { opacity: 0.9; line-height: 1.6; font-size: 16px; }
+    .allies-text { font-size: 17px; opacity: 0.9; line-height: 1.6; }
+
+    /* JOURNAL */
+    .prompt-item { padding-left: 20px; margin-bottom: 28px; }
+    .prompt-text { font-size: 18px; opacity: 0.9; line-height: 1.7; }
+    .journal-note {
+      font-size: 14px; opacity: 0.5; font-style: italic;
+      line-height: 1.8; font-family: sans-serif; text-align: center;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 32px 24px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      opacity: 0.4;
+    }
+    footer p { font-family: sans-serif; font-size: 12px; letter-spacing: 2px; }
+    footer small { font-family: sans-serif; font-size: 11px; margin-top: 4px; display: block; }
+
+    /* ERROR NOTICE */
+    #auto-notice {
+      font-family: sans-serif;
+      font-size: 11px;
+      opacity: 0.4;
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOADING OVERLAY -->
+  <div id="loading-overlay">
+    <div class="loading-moon">🌙</div>
+    <div class="loading-text">READING THE SKY...</div>
+  </div>
+
+  <!-- HEADER -->
+  <div id="header">
+    <div id="header-inner">
+      <div class="title-label">COZY MOON SANCTUARY</div>
+      <div class="title-sub">Where AstroAssistant tells you WHEN, Sanctuary teaches you HOW</div>
+
+      <div id="live-badge">
+        <div class="live-dot"></div>
+        <span id="live-badge-text">LIVE · TODAY</span>
+      </div>
+
+      <div id="auto-notice"></div>
+
+      <!-- Phase Selector -->
+      <div>
+        <div class="selector-label">SELECT YOUR MOON PHASE</div>
+        <div class="phase-buttons">
+          <button class="phase-btn active" data-phase="new" onclick="selectPhase('new')">New Moon</button>
+          <button class="phase-btn" data-phase="first" onclick="selectPhase('first')">First Quarter</button>
+          <button class="phase-btn" data-phase="full" onclick="selectPhase('full')">Full Moon</button>
+          <button class="phase-btn" data-phase="last" onclick="selectPhase('last')">Last Quarter</button>
+        </div>
+      </div>
+
+      <!-- Sign Selector -->
+      <div class="sign-selector-wrap">
+        <div class="selector-label">MOON IS IN</div>
+        <select id="sign-select" onchange="selectSign(this.value)">
+          <option value="Aries">&#9800; Aries</option>
+          <option value="Taurus">&#9801; Taurus</option>
+          <option value="Gemini">&#9802; Gemini</option>
+          <option value="Cancer">&#9803; Cancer</option>
+          <option value="Leo">&#9804; Leo</option>
+          <option value="Virgo">&#9805; Virgo</option>
+          <option value="Libra">&#9806; Libra</option>
+          <option value="Scorpio">&#9807; Scorpio</option>
+          <option value="Sagittarius">&#9808; Sagittarius</option>
+          <option value="Capricorn">&#9809; Capricorn</option>
+          <option value="Aquarius">&#9810; Aquarius</option>
+          <option value="Pisces">&#9811; Pisces</option>
+        </select>
+      </div>
+
+      <!-- Phase Display -->
+      <div class="phase-display">
+        <div class="phase-display-label">YOUR CURRENT ENERGY</div>
+        <div id="phase-title">New Moon in Aries &#9800;</div>
+        <div id="phase-subtitle">The Womb &amp; The Void</div>
+        <div id="phase-theme">Rest / Intuition / Rebirth</div>
+        <div id="illum-bar-wrap">
+          <span id="illum-label">Illumination</span>
+          <div id="illum-bar-track">
+            <div id="illum-bar-fill" style="width:0%"></div>
+          </div>
+          <span id="illum-pct">0%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div id="tabs-bar">
+    <div id="tabs-inner">
+      <button class="tab-btn active" data-tab="energy" onclick="selectTab('energy')">✨ Energy</button>
+      <button class="tab-btn" data-tab="ritual" onclick="selectTab('ritual')">🕍 Ritual</button>
+      <button class="tab-btn" data-tab="journal" onclick="selectTab('journal')">📖 Journal</button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div id="content"></div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>COZY MOON SANCTUARY</p>
+    <small>Where strategy meets soul</small>
+  </footer>
+
+  <script>
+    var phases = {
+      new: {
+        name: "New Moon",
+        subtitle: "The Womb & The Void",
+        archetype: "The Mystic",
+        theme: "Rest / Intuition / Rebirth",
+        bg: "#0f0c29",
+        accent: "#a78bfa",
+        energy: "The sky is dark. This is fertile darkness, the womb of all creation. Here, we do not DO, we BECOME. We listen to whispers, not demands. This is sacred conception, where intentions are planted in the invisible realm before they touch soil.",
+        ritualName: "The Architect's Silence",
+        timing: "Day of New Moon",
+        purpose: "Mental conception, inner architecture",
+        steps: [
+          "Cleanse your space with sound, smoke, or intention",
+          "Sit in stillness and take 3 deep breaths",
+          "Place hands on your womb or lower belly",
+          "Ask: What wants to be born through me this cycle?",
+          "Write without editing. Let your soul speak.",
+          "Close: I am the architect of my destiny. In this sacred darkness, I plant the seeds of my power."
+        ],
+        allies: "Rosemary (clarity) + Black Onyx (grounding)",
+        journal: [
+          "What foundation do I want to build within myself this month?",
+          "Where have I been forcing instead of flowing?",
+          "What does my body need me to know right now?",
+          "If I trusted myself completely, what would I choose?"
+        ]
+      },
+      first: {
+        name: "First Quarter",
+        subtitle: "The Maiden & Rising Energy",
+        archetype: "The Creator",
+        theme: "Creativity / Vision / Play",
+        bg: "#0d2818",
+        accent: "#34d399",
+        energy: "The light returns. Energy rises like sap in spring. This is the phase of possibility, where ideas sparkle, creativity flows, and you feel ready to MOVE. Not from pressure, but from pure aliveness. This is feminine momentum: pleasure-led, curiosity-driven, playful.",
+        ritualName: "The Seal of the Architect",
+        timing: "2 to 3 days after New Moon (first visible crescent)",
+        purpose: "Activate and anchor your intention",
+        steps: [
+          "Cleanse your space with rosemary or sound",
+          "Light a candle at the center of your altar",
+          "Read your New Moon intention aloud with authority",
+          "Write ONE priority for this cycle on paper",
+          "Place rosemary in the center, fold paper into a talisman",
+          "Place your crystal on top to seal it",
+          "Say: What has been conceived is now made manifest. I am the builder and guardian of my throne.",
+          "Drink rosemary tea mindfully to complete the ritual"
+        ],
+        allies: "Rosemary (commitment) + Carnelian (action)",
+        journal: [
+          "What is the smallest, most joyful action I can take today?",
+          "Where do I feel creative energy wanting to move through me?",
+          "What would I do if I knew I could not fail?",
+          "How can I make my goals feel more like play?"
+        ]
+      },
+      full: {
+        name: "Full Moon",
+        subtitle: "The Mother & The Radiance",
+        archetype: "The Queen",
+        theme: "Expression / Visibility / Celebration",
+        bg: "#3b1a00",
+        accent: "#fb923c",
+        energy: "The moon is FULL. You are FULL. This is your moment to shine without apology. To be seen. To celebrate. To claim what you have built. The Mother archetype is not just about nurturing others, it is about being generous with your own light. This is radiant feminine leadership.",
+        ritualName: "Waters of Sunlight",
+        timing: "Evening before or day of Full Moon",
+        purpose: "Celebrate progress and amplify radiance",
+        steps: [
+          "Fill a glass bowl with water and add calendula petals",
+          "Place where moonlight will touch it overnight",
+          "Hold hands over bowl: Moon and Sun unite in these waters. May my inner light shine brilliantly.",
+          "Leave overnight to charge under the moon",
+          "Morning: anoint your face, neck, and heart with the water",
+          "Look in the mirror and say: I am sovereign. My light is a gift. I celebrate my path.",
+          "Smile at yourself. This step matters most."
+        ],
+        allies: "Calendula (joy) + Citrine (radiance)",
+        journal: [
+          "What am I most proud of in my journey right now?",
+          "Where am I still hiding my light, and why?",
+          "What part of me is ready to be seen by the world?",
+          "How can I celebrate myself without waiting for external validation?"
+        ]
+      },
+      last: {
+        name: "Last Quarter",
+        subtitle: "The Crone & The Release",
+        archetype: "The Wise Woman",
+        theme: "Discernment / Boundaries / Truth",
+        bg: "#0a0a1a",
+        accent: "#818cf8",
+        energy: "The light begins to fade. This is not loss, it is liberation. The Crone knows what must be released for the next cycle to be pure. She cuts cords. She speaks truth. She honors endings. This phase asks: What are you carrying that was never yours to hold?",
+        ritualName: "Fire of Clarity",
+        timing: "Last Quarter Moon",
+        purpose: "Release burdens, transmute lessons, clear space",
+        steps: [
+          "Cleanse your space with sage smoke",
+          "Take your sealed intention from the Waxing Moon and review the month",
+          "On 3 bay leaves, write what you are releasing: a fear, a pattern, a burden",
+          "Burn each leaf: I return to earth what no longer serves. I release with love.",
+          "Burn or tear your original intention. The cycle is complete.",
+          "Sit with smoky quartz and absorb the lesson",
+          "Close: I keep the wisdom, I release the weight. I am free."
+        ],
+        allies: "Bay Leaf (purification) + Smoky Quartz (transmutation)",
+        journal: [
+          "What am I still carrying that I am ready to release?",
+          "Where have I been betraying my own boundaries?",
+          "What is the most valuable lesson this cycle taught me?",
+          "How can I honor this ending to prepare for a new beginning?"
+        ]
+      }
+    };
+
+    var zodiacSymbols = {
+      Aries: "&#9800;", Taurus: "&#9801;", Gemini: "&#9802;", Cancer: "&#9803;",
+      Leo: "&#9804;", Virgo: "&#9805;", Libra: "&#9806;", Scorpio: "&#9807;",
+      Sagittarius: "&#9808;", Capricorn: "&#9809;", Aquarius: "&#9810;", Pisces: "&#9811;"
+    };
+
+    var currentPhase = "new";
+    var currentSign = "Aries";
+    var currentTab = "energy";
+
+    // ─────────────────────────────────────────────────────────────
+    // MOON PHASE CALCULATION (Jean Meeus algorithm)
+    // Returns phase 0-1 (0=new, 0.25=first quarter, 0.5=full, 0.75=last quarter)
+    // ─────────────────────────────────────────────────────────────
+    function getMoonPhaseData(date) {
+      var year = date.getFullYear();
+      var month = date.getMonth() + 1;
+      var day = date.getDate();
+
+      // Julian Day Number
+      if (month <= 2) { year--; month += 12; }
+      var A = Math.floor(year / 100);
+      var B = 2 - A + Math.floor(A / 4);
+      var JD = Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + B - 1524.5;
+
+      // Days since known new moon (Jan 6 2000 = JD 2451549.5)
+      var daysSinceNew = JD - 2451549.5;
+      var synodicMonth = 29.53058867;
+      var age = ((daysSinceNew % synodicMonth) + synodicMonth) % synodicMonth;
+      var fraction = age / synodicMonth; // 0 to 1
+
+      // Illumination (simple cosine approximation)
+      var illumination = Math.round((1 - Math.cos(fraction * 2 * Math.PI)) / 2 * 100);
+
+      // Phase bucket
+      var phaseKey;
+      if (fraction < 0.0625 || fraction >= 0.9375) {
+        phaseKey = "new";
+      } else if (fraction < 0.3125) {
+        phaseKey = "first";
+      } else if (fraction < 0.4375) {
+        phaseKey = "full";
+      } else if (fraction < 0.6875) {
+        phaseKey = "full"; // waning gibbous still Full energy
+      } else if (fraction < 0.8125) {
+        phaseKey = "last";
+      } else {
+        phaseKey = "last";
+      }
+
+      // More accurate bucketing
+      if (fraction < 0.1) phaseKey = "new";
+      else if (fraction < 0.4) phaseKey = "first";
+      else if (fraction < 0.6) phaseKey = "full";
+      else if (fraction < 0.9) phaseKey = "last";
+      else phaseKey = "new";
+
+      return { phaseKey: phaseKey, illumination: illumination, age: age };
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // MOON SIGN CALCULATION (approximate, ~1-2 day accuracy)
+    // The moon moves ~13.2°/day and completes the zodiac in ~27.3 days
+    // ─────────────────────────────────────────────────────────────
+    function getMoonSign(date) {
+      // Known reference: Moon entered Aries at JD 2451545.0 (Jan 1.5 2000, approximately)
+      // Each sign = 30° = 30/13.1764 ≈ 2.275 days
+      var year = date.getFullYear();
+      var month = date.getMonth() + 1;
+      var day = date.getDate();
+
+      if (month <= 2) { year--; month += 12; }
+      var A = Math.floor(year / 100);
+      var B = 2 - A + Math.floor(A / 4);
+      var JD = Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + B - 1524.5;
+
+      // Moon's mean longitude (degrees)
+      var d = JD - 2451545.0;
+      var L = (218.316 + 13.176396 * d) % 360;
+      if (L < 0) L += 360;
+
+      // Approximate correction for elliptical orbit (rough, ±5°)
+      var M = (134.963 + 13.064993 * d) % 360;
+      if (M < 0) M += 360;
+      var Mrad = M * Math.PI / 180;
+      L = L + 6.289 * Math.sin(Mrad);
+      L = ((L % 360) + 360) % 360;
+
+      var signs = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo",
+                   "Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
+      var signIndex = Math.floor(L / 30);
+      return signs[signIndex];
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // INIT: detect today's moon and pre-select
+    // ─────────────────────────────────────────────────────────────
+    function initMoon() {
+      var today = new Date();
+      var moonData = getMoonPhaseData(today);
+      var moonSign = getMoonSign(today);
+
+      currentPhase = moonData.phaseKey;
+      currentSign = moonSign;
+
+      // Update sign selector
+      document.getElementById("sign-select").value = moonSign;
+
+      // Update illumination bar
+      var accent = phases[currentPhase].accent;
+      document.getElementById("illum-bar-fill").style.width = moonData.illumination + "%";
+      document.getElementById("illum-bar-fill").style.background = accent;
+      document.getElementById("illum-pct").textContent = moonData.illumination + "%";
+
+      // Update live badge
+      var options = { month: "short", day: "numeric" };
+      var dateStr = today.toLocaleDateString("en-US", options).toUpperCase();
+      document.getElementById("live-badge-text").textContent = "LIVE · " + dateStr;
+
+      // Auto-notice
+      document.getElementById("auto-notice").textContent =
+        "Automatically set to today's sky — adjust manually if needed";
+
+      updateAll();
+      hideLoading();
+    }
+
+    function hideLoading() {
+      var overlay = document.getElementById("loading-overlay");
+      overlay.classList.add("hidden");
+      setTimeout(function() { overlay.style.display = "none"; }, 700);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // UI INTERACTIONS
+    // ─────────────────────────────────────────────────────────────
+    function selectPhase(phase) {
+      currentPhase = phase;
+      currentTab = "energy";
+      // Reset illumination bar to rough midpoint for manual phase
+      var midpoints = { new: 0, first: 50, full: 100, last: 50 };
+      document.getElementById("illum-bar-fill").style.width = midpoints[phase] + "%";
+      document.getElementById("illum-bar-fill").style.background = phases[phase].accent;
+      document.getElementById("illum-pct").textContent = midpoints[phase] + "%";
+      updateAll();
+    }
+
+    function selectSign(sign) {
+      currentSign = sign;
+      updateAll();
+    }
+
+    function selectTab(tab) {
+      currentTab = tab;
+      renderContent();
+      updateTabButtons();
+    }
+
+    function updateAll() {
+      var phase = phases[currentPhase];
+
+      // Header background
+      document.getElementById("header").style.background =
+        "linear-gradient(135deg, " + phase.bg + ", #1a0533)";
+
+      // Phase title
+      document.getElementById("phase-title").innerHTML =
+        phase.name + " in " + currentSign + " " + zodiacSymbols[currentSign];
+      document.getElementById("phase-subtitle").textContent = phase.subtitle;
+      document.getElementById("phase-theme").style.color = phase.accent;
+      document.getElementById("phase-theme").textContent = phase.theme;
+
+      // Phase buttons
+      document.querySelectorAll(".phase-btn").forEach(function(btn) {
+        var isActive = btn.getAttribute("data-phase") === currentPhase;
+        btn.classList.toggle("active", isActive);
+        btn.style.borderColor = isActive ? phase.accent : "rgba(255,255,255,0.15)";
+        btn.style.background = isActive ? phase.accent : "transparent";
+        btn.style.color = isActive ? "#0d0d1a" : "white";
+        btn.style.fontWeight = isActive ? "bold" : "normal";
+      });
+
+      // Illumination bar color
+      document.getElementById("illum-bar-fill").style.background = phase.accent;
+
+      renderContent();
+      updateTabButtons();
+    }
+
+    function updateTabButtons() {
+      document.querySelectorAll(".tab-btn").forEach(function(btn) {
+        var isActive = btn.getAttribute("data-tab") === currentTab;
+        btn.classList.toggle("active", isActive);
+      });
+    }
+
+    function renderContent() {
+      var phase = phases[currentPhase];
+      var html = "";
+
+      if (currentTab === "energy") {
+        html += '<div class="card">';
+        html += '<span class="card-label">ENERGY BRIEFING</span>';
+        html += '<p class="card-body">' + phase.energy + '</p>';
+        html += '</div>';
+        html += '<div class="card-accent" style="background:' + phase.accent + '18; border: 1px solid ' + phase.accent + '44">';
+        html += '<span class="card-label">YOUR ARCHETYPE THIS PHASE</span>';
+        html += '<div class="archetype-name" style="color:' + phase.accent + '">' + phase.archetype + '</div>';
+        html += '<div class="archetype-sub">Moon in ' + currentSign + ' ' + zodiacSymbols[currentSign] + '</div>';
+        html += '</div>';
+      }
+
+      if (currentTab === "ritual") {
+        html += '<div class="card">';
+        html += '<span class="card-label">YOUR RITUAL</span>';
+        html += '<div class="ritual-name">' + phase.ritualName + '</div>';
+        html += '<div class="ritual-meta">';
+        html += '<span><strong style="color:' + phase.accent + '">When:</strong> ' + phase.timing + '</span>';
+        html += '<span><strong style="color:' + phase.accent + '">Purpose:</strong> ' + phase.purpose + '</span>';
+        html += '</div>';
+        html += '<span class="card-label">THE PRACTICE</span>';
+        html += '<ul class="step-list">';
+        phase.steps.forEach(function(step, i) {
+          html += '<li class="step-item">';
+          html += '<span class="step-num" style="color:' + phase.accent + '">' + (i+1) + '.</span>';
+          html += '<span class="step-text">' + step + '</span>';
+          html += '</li>';
+        });
+        html += '</ul></div>';
+        html += '<div class="card-accent" style="background:' + phase.accent + '18; border: 1px solid ' + phase.accent + '44">';
+        html += '<span class="card-label">YOUR ALLIES</span>';
+        html += '<p class="allies-text">' + phase.allies + '</p>';
+        html += '</div>';
+      }
+
+      if (currentTab === "journal") {
+        html += '<div class="card">';
+        html += '<span class="card-label">SOUL PROMPTS</span>';
+        phase.journal.forEach(function(prompt) {
+          html += '<div class="prompt-item" style="border-left: 3px solid ' + phase.accent + '">';
+          html += '<p class="prompt-text">' + prompt + '</p>';
+          html += '</div>';
+        });
+        html += '</div>';
+        html += '<div class="card" style="background:rgba(255,255,255,0.02); text-align:center">';
+        html += '<p class="journal-note">Take your time with these. There is no rush. Let your soul speak without editing. This is between you and the moon.</p>';
+        html += '</div>';
+      }
+
+      document.getElementById("content").innerHTML = html;
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // START
+    // ─────────────────────────────────────────────────────────────
+    window.addEventListener("load", function() {
+      setTimeout(initMoon, 600); // slight delay for the loading animation to breathe
+    });
+  </script>
+</body>
+</html>
