@@ -1,0 +1,765 @@
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #f5f3f0 0%, #ede9e4 100%);
+        color: #2c2c2c;
+        line-height: 1.6;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(44, 44, 44, 0.08);
+        overflow: hidden;
+    }
+
+    .header {
+        background: linear-gradient(135deg, #203a4d 0%, #1a2f3f 100%);
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+    }
+
+    .header h1 {
+        font-size: 2.2em;
+        font-weight: 600;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+    }
+
+    .header p {
+        font-size: 1.1em;
+        opacity: 0.95;
+        font-weight: 300;
+    }
+
+    .cosmic-badge {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 8px 16px;
+        border-radius: 20px;
+        margin-top: 12px;
+        font-size: 0.95em;
+        font-weight: 500;
+    }
+
+    .intensity-marker {
+        background: rgba(220, 53, 69, 0.15);
+        border: 2px solid #dc3545;
+        border-radius: 12px;
+        padding: 20px 30px;
+        margin: 30px;
+        text-align: center;
+    }
+
+    .intensity-label {
+        font-size: 0.85em;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #dc3545;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .intensity-text {
+        font-size: 1.3em;
+        color: #3c3c3c;
+        font-weight: 600;
+    }
+
+    .intensity-description {
+        font-size: 0.95em;
+        color: #5a5a5a;
+        margin-top: 12px;
+        font-style: italic;
+    }
+
+    .tabs {
+        display: flex;
+        border-bottom: 2px solid #e8e4df;
+        background: #fafaf8;
+    }
+
+    .tab-btn {
+        flex: 1;
+        padding: 18px 20px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: 500;
+        color: #203a4d;
+        transition: all 0.3s ease;
+        position: relative;
+        text-align: center;
+    }
+
+    .tab-btn:hover {
+        background: rgba(32, 58, 77, 0.05);
+        color: #3c3c3c;
+    }
+
+    .tab-btn.active {
+        color: #203a4d;
+        border-bottom: 3px solid #203a4d;
+        margin-bottom: -2px;
+    }
+
+    .tab-content {
+        display: none;
+        padding: 40px 30px;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-title {
+        font-size: 1.4em;
+        font-weight: 600;
+        color: #3c3c3c;
+        margin-bottom: 24px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #e8e4df;
+    }
+
+    .rising-sign-selector {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+        margin-bottom: 30px;
+    }
+
+    .sign-btn {
+        padding: 12px 16px;
+        border: 2px solid #d4ccc4;
+        background: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        color: #203a4d;
+        transition: all 0.3s ease;
+        font-size: 0.95em;
+    }
+
+    .sign-btn:hover {
+        border-color: #203a4d;
+        background: rgba(32, 58, 77, 0.05);
+    }
+
+    .sign-btn.active {
+        background: #203a4d;
+        color: white;
+        border-color: #203a4d;
+    }
+
+    .house-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        margin-bottom: 30px;
+    }
+
+    .house-card {
+        background: linear-gradient(135deg, #fafaf8 0%, #f3f0ed 100%);
+        border: 1px solid #e8e4df;
+        border-radius: 12px;
+        padding: 24px;
+        transition: all 0.3s ease;
+    }
+
+    .house-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(44, 44, 44, 0.08);
+        border-color: #203a4d;
+    }
+
+    .house-header {
+        font-size: 1.1em;
+        font-weight: 600;
+        color: #203a4d;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .house-content {
+        font-size: 0.95em;
+        color: #4a4a4a;
+        line-height: 1.7;
+    }
+
+    .keywords {
+        background: white;
+        padding: 12px 16px;
+        border-left: 3px solid #203a4d;
+        margin-top: 12px;
+        border-radius: 4px;
+        font-size: 0.9em;
+        color: #5a5a5a;
+        font-weight: 500;
+    }
+
+    .ceo-plan {
+        background: linear-gradient(135deg, #fafaf8 0%, #f3f0ed 100%);
+        border: 1px solid #e8e4df;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+
+    .ceo-plan-title {
+        font-size: 1.15em;
+        font-weight: 600;
+        color: #203a4d;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .ceo-do {
+        background: rgba(32, 58, 77, 0.08);
+        padding: 16px;
+        border-left: 3px solid #203a4d;
+        border-radius: 4px;
+        margin-bottom: 16px;
+    }
+
+    .ceo-avoid {
+        background: rgba(220, 53, 69, 0.08);
+        padding: 16px;
+        border-left: 3px solid #dc3545;
+        border-radius: 4px;
+        margin-bottom: 16px;
+    }
+
+    .ceo-label {
+        font-weight: 600;
+        font-size: 0.85em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+        color: #203a4d;
+    }
+
+    .daily-guide {
+        display: grid;
+        gap: 20px;
+    }
+
+    .day-card {
+        border: 1px solid #e8e4df;
+        border-radius: 12px;
+        padding: 24px;
+        background: white;
+        transition: all 0.3s ease;
+    }
+
+    .day-card:hover {
+        border-color: #203a4d;
+        box-shadow: 0 4px 12px rgba(32, 58, 77, 0.1);
+    }
+
+    .day-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #e8e4df;
+    }
+
+    .day-date {
+        font-size: 1.3em;
+        font-weight: 600;
+        color: #203a4d;
+    }
+
+    .day-planet {
+        font-size: 1.8em;
+        opacity: 0.7;
+    }
+
+    .day-transit {
+        font-size: 0.95em;
+        font-weight: 500;
+        color: #203a4d;
+        flex-grow: 1;
+    }
+
+    .day-content {
+        color: #4a4a4a;
+        line-height: 1.8;
+    }
+
+    .day-content p {
+        margin-bottom: 12px;
+    }
+
+    .day-insight {
+        background: rgba(32, 58, 77, 0.05);
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-top: 12px;
+        font-size: 0.95em;
+        font-style: italic;
+        color: #5a5a5a;
+    }
+
+    .ceo-commitment {
+        background: linear-gradient(135deg, #fafaf8 0%, #f3f0ed 100%);
+        border: 2px solid #203a4d;
+        border-radius: 12px;
+        padding: 24px;
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .commitment-label {
+        font-size: 0.85em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #203a4d;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+    .commitment-text {
+        font-size: 1.1em;
+        color: #3c3c3c;
+        font-weight: 500;
+        line-height: 1.6;
+    }
+
+    .footer {
+        background: #fafaf8;
+        padding: 24px 30px;
+        border-top: 1px solid #e8e4df;
+        text-align: center;
+        font-size: 0.9em;
+        color: #888;
+    }
+
+    .note {
+        background: rgba(32, 58, 77, 0.05);
+        padding: 16px;
+        border-left: 3px solid #203a4d;
+        border-radius: 4px;
+        margin: 20px 0;
+        font-size: 0.95em;
+        color: #5a5a5a;
+    }
+
+    .transit-dates {
+        background: white;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 3px solid #a68e45;
+        font-size: 0.95em;
+    }
+
+    .transit-date-item {
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #203a4d;
+    }
+
+    .transit-date-item:last-child {
+        margin-bottom: 0;
+    }
+</style>
+
+<div class="container">
+    <div class="header">
+        <h1>🌙 AstroAssistant</h1>
+        <p>Your Cosmic Intelligence for the Week of April 19 – 26, 2026</p>
+        <div class="cosmic-badge">New Moon in Aries | Venus Conjunct Uranus in Taurus | Uranus enters Gemini | Major Shifts</div>
+    </div>
+
+    <div class="intensity-marker">
+        <div class="intensity-label">⚡ Cosmic Intensity This Week</div>
+        <div class="intensity-text">VERY HIGH (8/10)</div>
+        <div class="intensity-description">New Moon in Aries launches a 29.5-day cycle of courage and new beginnings. Venus-Uranus (29° Taurus) brings sudden value shifts and relationship disruptions. Uranus enters Gemini for 7 years, beginning a communication/tech revolution. Expect acceleration, clarity, and the need to adapt fast.</div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="houses">Houses & Activation</button>
+        <button class="tab-btn" data-tab="ceo">CEO Plan</button>
+        <button class="tab-btn" data-tab="daily">Daily Guide</button>
+    </div>
+
+    <!-- HOUSES & ACTIVATION TAB -->
+    <div id="houses" class="tab-content active">
+        <div class="section-title">Houses Activated This Week</div>
+
+        <div class="note">
+            <strong>Rising Sign Selection:</strong> This week brings a New Moon in Aries (courage, new start), Venus-Uranus disruption in Taurus (values, money, relationships), and Uranus entering Gemini for 7 years (communication evolution). Choose your Rising Sign to see where these powerful transits land in your chart.
+        </div>
+
+        <div class="rising-sign-selector" id="signSelector">
+            <button class="sign-btn" data-sign="Aries">♈ Aries Rising</button>
+            <button class="sign-btn" data-sign="Taurus">♉ Taurus Rising</button>
+            <button class="sign-btn" data-sign="Gemini">♊ Gemini Rising</button>
+            <button class="sign-btn" data-sign="Cancer">♋ Cancer Rising</button>
+            <button class="sign-btn" data-sign="Leo">♌ Leo Rising</button>
+            <button class="sign-btn" data-sign="Virgo">♍ Virgo Rising</button>
+            <button class="sign-btn" data-sign="Libra">♎ Libra Rising</button>
+            <button class="sign-btn" data-sign="Scorpio">♏ Scorpio Rising</button>
+            <button class="sign-btn" data-sign="Sagittarius">♐ Sagittarius Rising</button>
+            <button class="sign-btn" data-sign="Capricorn">♑ Capricorn Rising</button>
+            <button class="sign-btn" data-sign="Aquarius">♒ Aquarius Rising</button>
+            <button class="sign-btn" data-sign="Pisces">♓ Pisces Rising</button>
+        </div>
+
+        <div class="transit-dates">
+            <div class="transit-date-item">🌑 <strong>April 19, 1:51 PM:</strong> New Moon in Aries – Courage. New beginnings. Direct action. A fresh 29.5-day cycle starts.</div>
+            <div class="transit-date-item">♀☌♅ <strong>April 23-24 (peak):</strong> Venus Conjunct Uranus in Taurus (29°) – Sudden value shifts. What you want changes. Relationships disrupted. Money moves. Internal revolution before external change.</div>
+            <div class="transit-date-item">☉ <strong>April 19, 3:38 AM:</strong> Sun enters Taurus – One month of slow, steady building. Comfort. Sustainability. Micro-rewards.</div>
+            <div class="transit-date-item">☿☌♂ <strong>April 19-21:</strong> Mercury Conjunct Mars – Bold thinking. Direct speech. Impatience. Pick your battles.</div>
+            <div class="transit-date-item">☿☌♄ <strong>April 19-20:</strong> Mercury Conjunct Saturn – Serious planning. Clarity on what's worth your energy. Mental mastery required.</div>
+            <div class="transit-date-item">♅ <strong>April 25, 2:49 AM:</strong> Uranus enters Gemini – 7-YEAR CYCLE BEGINS. Technology. Communication. Information revolution. The future arrives.</div>
+            <div class="transit-date-item">🌓 <strong>April 23-25:</strong> First Quarter Moon Leo → Virgo – Passion becomes Planning. Creativity becomes Execution.</div>
+        </div>
+
+        <div id="housesContent" class="house-grid">
+            <!-- JavaScript populates this based on Rising Sign selection -->
+        </div>
+    </div>
+
+    <!-- CEO PLAN TAB -->
+    <div id="ceo" class="tab-content">
+        <div class="section-title">CEO Plan: April 19–26</div>
+
+        <div class="ceo-plan">
+            <div class="ceo-plan-title">📊 The Cosmic Forecast for Your Leadership</div>
+            <p style="margin-bottom: 20px; color: #5a5a5a;">
+                This week is about <strong>brave new starts colliding with sudden value shifts.</strong> The New Moon in Aries plants seeds of courage and directness. But Venus-Uranus in Taurus disrupts everything you thought you valued—your money, your relationships, your comfort. What you want is changing. What matters is different now.
+            </p>
+            <p style="color: #5a5a5a;">
+                Meanwhile, Uranus enters Gemini for 7 years. Communication, technology, information itself is about to transform. You're being called to think differently, communicate differently, build differently. This is a week to be HONEST about what's shifting in you, and BRAVE enough to follow it.
+            </p>
+        </div>
+
+        <div class="ceo-plan">
+            <div class="ceo-plan-title">✅ DO This Week (Aligned Actions)</div>
+            <div class="ceo-do">
+                <div class="ceo-label">Plant Seeds of Courage (April 19)</div>
+                <p>New Moon in Aries = fresh start cycle. What are you ready to do that scares you? What do you want to say? What direction calls you? Plant that seed consciously. Aries energy supports brave action.</p>
+            </div>
+            <div class="ceo-do">
+                <div class="ceo-label">Get Honest About Your Values (April 23-24)</div>
+                <p>Venus-Uranus disrupts what you think you want. Don't resist this. Sit with it. What's shifting? What no longer serves? What's calling you? This is INTERNAL work first. The external changes follow.</p>
+            </div>
+            <div class="ceo-do">
+                <div class="ceo-label">Review What You've Built (April 19-20)</div>
+                <p>Mercury-Saturn brings clarity. Is your foundation solid? Does it bring joy? What needs restructuring? This is excellent energy for honest assessment of your business and life.</p>
+            </div>
+            <div class="ceo-do">
+                <div class="ceo-label">Speak Your Truth (April 19-21)</div>
+                <p>Mercury-Mars makes you bold. Say what needs saying. But think first—Saturn is there too. This is strategic directness, not reckless honesty. Pick the important battles.</p>
+            </div>
+            <div class="ceo-do">
+                <div class="ceo-label">Get Curious About the New Era (April 25+)</div>
+                <p>Uranus in Gemini for 7 years = communication and tech are about to transform. What's the new way YOU want to show up? What tools will you master? What's your voice in this new era?</p>
+            </div>
+            <div class="ceo-do">
+                <div class="ceo-label">Translate Passion Into Plan (April 23-25)</div>
+                <p>Moon shifts Leo (passion) to Virgo (planning). You have fire AND strategy. Channel Aries courage into Virgo systems. Make your big idea real through small, doable steps.</p>
+            </div>
+        </div>
+
+        <div class="ceo-plan">
+            <div class="ceo-plan-title">⚠️ AVOID or Navigate Carefully</div>
+            <div class="ceo-avoid">
+                <div class="ceo-label">Don't Act on Venus-Uranus Impulses Immediately</div>
+                <p>This transit makes you want to change everything NOW. Sit with the urge first. Let it settle. Then decide. Impulsive changes under this aspect often need revision.</p>
+            </div>
+            <div class="ceo-avoid">
+                <div class="ceo-label">Don't Blow Up Your Relationships Without Reflection</div>
+                <p>Venus-Uranus can disrupt partnerships. Before you end anything, get honest: Is it the relationship or is it YOU that's changing? Sometimes we need to evolve within the relationship, not leave it.</p>
+            </div>
+            <div class="ceo-avoid">
+                <div class="ceo-label">Don't Argue for the Sake of Winning</div>
+                <p>Mercury-Mars can be aggressive. You might WIN an argument. But winning an argument isn't the same as moving forward. Choose battles that actually matter.</p>
+            </div>
+            <div class="ceo-avoid">
+                <div class="ceo-label">Don't Panic About Uranus in Gemini</div>
+                <p>Yes, it's major. Yes, communication/tech is changing. But you have 7 YEARS to adapt. You don't need to figure it all out this week. Breathe. Stay curious. Move steadily.</p>
+            </div>
+        </div>
+
+        <div class="ceo-commitment">
+            <div class="commitment-label">Your One CEO Commitment This Week</div>
+            <div class="commitment-text">
+                "I will plant seeds of courage aligned with who I'm BECOMING, not who I've been. I will get honest about what's shifting in my values. I will speak my truth strategically. And I will get curious about the new communication era arriving—ready to adapt, not afraid to lead. The future is changing. I'm changing with it."
+            </div>
+        </div>
+    </div>
+
+    <!-- DAILY GUIDE TAB -->
+    <div id="daily" class="tab-content">
+        <div class="section-title">Day-by-Day Breakdown (April 19 – 26)</div>
+
+        <div class="daily-guide">
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-date">Saturday, April 19</div>
+                    <div class="day-planet">🌑 ☿</div>
+                    <div class="day-transit">New Moon in Aries + Mercury-Mars-Saturn + Sun enters Taurus</div>
+                </div>
+                <div class="day-content">
+                    <p><strong>Theme: Brave New Start. Clear Thinking. Solid Foundations.</strong></p>
+                    <p>New Moon in Aries at 1:51 PM plants seeds of courage and direct action. This is a fresh 29.5-day cycle. Mercury conjuncts both Mars and Saturn—your mind is SHARP, BOLD, and STRATEGIC. You know what you want. You know what needs to happen. Sun enters Taurus—the next month supports slow, steady building.</p>
+                    <p><strong>CEO Translation:</strong> Set your intention for the next 29.5 days. Make it brave. Make it real. Be strategic about what you say. This is the start of something.</p>
+                    <div class="day-insight">💡 Courage + Strategy = Winning combination.</div>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-date">Sunday, April 20</div>
+                    <div class="day-planet">☿ ♄</div>
+                    <div class="day-transit">Mercury Conjunct Saturn (peak)</div>
+                </div>
+                <div class="day-content">
+                    <p><strong>Theme: Mental Mastery. Long-Term Planning. Honesty About Your Foundation.</strong></p>
+                    <p>Mercury-Saturn brings serious, clear thinking. This is excellent energy for auditing what you've built. What's working? What needs restructuring? What's sustainable? No fluff. Just truth. Your mind can handle complexity and long-term strategy today.</p>
+                    <p><strong>CEO Translation:</strong> Spend time reviewing your business foundation. Is it solid? Does it bring joy? What changes are needed? This clarity is gold.</p>
+                    <div class="day-insight">💡 The best strategy is built on honest assessment.</div>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-date">Monday, April 21</div>
+                    <div class="day-planet">☿ ♂</div>
+                    <div class="day-transit">Mercury Conjunct Mars (last day) + Void Moon</div>
+                </div>
+                <div class="day-content">
+                    <p><strong>Theme: Integration. Rest. Before the Storm.</strong></p>
+                    <p>Mercury-Mars ends. Void Moon all day—nothing sticks. This is a natural pause. The intensity of the weekend settles. The week accelerates again starting tomorrow. Use today to integrate what you realized, to rest, to let ideas marinate.</p>
+                    <p><strong>CEO Translation:</strong> Don't push today. Don't launch. Don't decide. Let things settle. Trust that the clarity will still be there tomorrow, stronger.</p>
+                    <div class="day-insight">💡 Rest is productive too.</div>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-date">Tuesday, April 22</div>
+                    <div class="day-planet">♀ ☾</div>
+                    <div class="day-transit">Venus Conjunct Uranus in Taurus (approaches peak) + Waxing Crescent Cancer</div>
+                </div>
+                <div class="day-content">
+                    <p><strong>Theme: Value Shift. What You Actually Want. Emotional Honesty.</strong></p>
+                    <p>Venus-Uranus (29° Taurus) approaches its peak. Your values are DISRUPTING. Something you thought mattered doesn't anymore. Something you dismissed might suddenly appeal. This isn't about changing externally—it's about getting HONEST with yourself. Cancer Moon brings emotional depth and the need to nurture yourself through this shift.</p>
+                    <p><strong>CEO Translation:</strong> Feel the disruption. Don't resist it. Journal: "What am I learning about what I actually want?" This is transformation, not crisis.</p>
+                    <div class="day-insight">💡 Your values are evolving. That's not wrong. That's growth.</div>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-date">Wednesday, April 23</div>
+                    <div class="day-planet">♀☌♅</div>
+                    <div class="day-transit">Venus Conjunct Uranus PEAK (29° Taurus) + Moon Leo → Virgo</div>
+                </div>
+                <div class="day-content">
+                    <p><strong>Theme: Maximum Disruption. Passion Meets Planning. The Turning Point.</strong></p>
+                    <p>VENUS-URANUS EXACT. This is the peak of value/money/relationship disruption. Something shifts inside you. What you want has CHANGED. At the same time, the Moon shifts from Leo (creative fire) to Virgo (practical planning). Your energy transforms: from "I want to create something wild" to "How do I make it happen?"</p>
+                    <p><strong>CEO Translation:</strong> This is THE turning point of the week. You're becoming someone different. Honor that. Don't fight it. Channel the disruption into action.</p>
+                    <div class="day-insight">💡 You're not broken. You're breaking open.</div>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-date">Thursday, April 24</div>
+                    <div class="day-planet">🌓 ☿</div>
+                    <div class="day-transit">First Quarter Moon Virgo + Mercury Square Jupiter</div>
+                </div>
+                <div class="day-content">
+                    <p><strong>Theme: Strategic Action. Optimism Meets Realism. Details Matter.</strong></p>
+                    <p>First Quarter Moon wants MOMENTUM. You're building. You're executing. But Mercury Square Jupiter says: Don't skip the details in your excitement. You CAN achieve big things, but only if you've checked the facts. This is big thinking with your feet on the ground.</p>
+                    <p><strong>CEO Translation:</strong> Make bold moves. But verify everything. Under-promise, over-deliver. Your reputation matters more than quick wins.</p>
+                    <div class="day-insight">💡 Optimism + Realism = Sustainable success.</div>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-date">Friday, April 25</div>
+                    <div class="day-planet">♅ 🌓</div>
+                    <div class="day-transit">URANUS ENTERS GEMINI — 7-year cycle begins + First Quarter in Virgo</div>
+                </div>
+                <div class="day-content">
+                    <p><strong>Theme: The Future Arrives. Communication Revolution. Adaptation Begins.</strong></p>
+                    <p>MAJOR TRANSIT. Uranus hasn't been in Gemini since 1941. It rules electricity, innovation, technology, communication. For the next 7 years, expect rapid changes in: how you communicate, what tools you use, how you learn, how you connect with your audience. AI, tech, new platforms. This is the revolution you're sensing.</p>
+                    <p><strong>CEO Translation:</strong> Get curious. What's the new way you want to show up? What tools will you master? This is a 7-year journey. You have time. Start thinking about it now.</p>
+                    <div class="day-insight">💡 The future is arriving. You're ready for it.</div>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-date">Saturday, April 26</div>
+                    <div class="day-planet">🌓 ☿</div>
+                    <div class="day-transit">First Quarter Moon Virgo continues + Sun Sextile North Node</div>
+                </div>
+                <div class="day-content">
+                    <p><strong>Theme: Building Your Vision. Leadership. Systems & Strategy.</strong></p>
+                    <p>Last day of the week brings grounded, practical momentum. You're organized. You have a plan. Sun Sextile North Node says: You're aligned with your purpose. The more you show WHO YOU ARE—not who you think you should be—the more you move forward on your path. This is YOUR time.</p>
+                    <p><strong>CEO Translation:</strong> Take action on what you've learned. The courage from Aries. The clarity from Mercury-Saturn. The growth from Venus-Uranus. The new era from Uranus in Gemini. Build it all together.</p>
+                    <div class="day-insight">💡 You're not just building a business. You're building a life aligned with who you're becoming.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>🌙 <strong>The Cozy Astro HQ</strong> | Premium AstroAssistant for Architect Members</p>
+        <p style="margin-top: 12px;">Source of Truth: Moonsight Digital Calendar | Transits Verified</p>
+        <p style="margin-top: 12px; font-size: 0.85em; opacity: 0.7;">This is cosmic intelligence for strategic living—not fortune-telling. You are always the CEO of your choices. The map is only useful if you know where you're standing. Calm is not passive. It's the most powerful place to lead from.</p>
+    </div>
+</div>
+
+<script>
+    var houseData = {
+        "Aries": {
+            "1st House (Self, Identity, New Beginnings)": {
+                main: "New Moon in Aries activates YOUR SELF. This is a personal rebirth cycle. Who are you becoming? The next 29.5 days are about claiming yourself more fully. Venus-Uranus (1.5 houses over) disrupts your values and what you want. You're evolving into a new version of yourself. Uranus in Gemini (your 3rd house) brings communication evolution.",
+                keywords: "Self, identity, new beginnings, personal rebirth, presence, courage"
+            }
+        },
+        "Taurus": {
+            "12th House (Spirituality, Behind Scenes, Rest)": {
+                main: "New Moon in Aries activates spiritual foundations and inner work. The next 29.5 days support meditation, dreams, subconscious work. Venus-Uranus in your 1st House is POWERFUL—your appearance, presence, identity is about to shift. You're becoming visibly different. Uranus in your 2nd brings disruption to security and values.",
+                keywords: "Spirituality, inner work, dreams, subconscious, release, integration"
+            }
+        },
+        "Gemini": {
+            "11th House (Community, Groups, Friendships)": {
+                main: "New Moon in Aries activates community and groups. Building collaborations. What groups serve you? Venus-Uranus in your 12th brings spiritual value shifts. Uranus in YOUR SIGN for 7 years = complete personal revolution. You're awakening. Becoming NEW. This is your power decade starting now.",
+                keywords: "Community, collaboration, groups, networks, friendship, belonging"
+            }
+        },
+        "Cancer": {
+            "10th House (Career, Public Image, Authority)": {
+                main: "New Moon in Aries activates career and public presence. New professional beginnings. Venus-Uranus in your 11th disrupts your networks and audience. Your circles are changing. Who you're known to is shifting. Uranus in your 3rd for 7 years brings communication revolution to your career.",
+                keywords: "Career, authority, public presence, professional boldness, visibility"
+            }
+        },
+        "Leo": {
+            "9th House (Learning, Travel, Philosophy)": {
+                main: "New Moon in Aries activates learning and expansion. You're ready for new knowledge, new perspectives, travel. Venus-Uranus in your 10th disrupts your career and public role. Something shifts in how you want to show up professionally. Uranus in your 2nd brings financial revolution.",
+                keywords: "Learning, travel, wisdom, philosophy, expansion, education, adventure"
+            }
+        },
+        "Virgo": {
+            "8th House (Shared Resources, Intimacy, Depth)": {
+                main: "New Moon in Aries activates shared resources and intimacy. Go deeper in partnerships. Venus-Uranus in your 9th brings value shifts around learning and travel. What you want to explore is changing. Uranus in your 1st for 7 years = YOU are transforming completely. Personal revolution begins.",
+                keywords: "Shared resources, intimacy, depth, honesty, transformation, power"
+            }
+        },
+        "Libra": {
+            "7th House (Partnerships, Contracts, 1:1)": {
+                main: "New Moon in Aries activates relationships and partnerships. New relationship cycles begin. Venus-Uranus in your 8th is POWERFUL—intimacy, money, depth are all disrupting. What you want from partnership is changing. Uranus in your 12th for 7 years brings spiritual awakening and soul work.",
+                keywords: "Partnerships, authenticity, contracts, marriage, honest relating, depth"
+            }
+        },
+        "Scorpio": {
+            "6th House (Work, Health, Daily Practice)": {
+                main: "New Moon in Aries activates work and health. New projects, new routines, new energy. Venus-Uranus in your 7th disrupts partnerships and relationships. What you want from others is changing. Uranus in your 11th for 7 years brings community revolution and network transformation.",
+                keywords: "Work, health, daily practice, implementation, optimization, routines"
+            }
+        },
+        "Sagittarius": {
+            "5th House (Creativity, Romance, Joy)": {
+                main: "New Moon in Aries activates creativity and romance. Creative projects launch. Romance becomes alive. Venus-Uranus in your 6th disrupts work and routines. How you want to work is changing. Uranus in your 10th for 7 years brings career revolution and public role transformation.",
+                keywords: "Creativity, romance, joy, creative expression, pleasure, passion, play"
+            }
+        },
+        "Capricorn": {
+            "4th House (Home, Family, Foundations)": {
+                main: "New Moon in Aries activates home and family. Family conversations become courageous. Home projects spark. Venus-Uranus in your 5th disrupts creativity and romance. What you enjoy is changing. Uranus in your 9th for 7 years brings learning and philosophy revolution.",
+                keywords: "Home, family, foundations, belonging, emotional security, roots"
+            }
+        },
+        "Aquarius": {
+            "3rd House (Communication, Ideas, Siblings)": {
+                main: "New Moon in Aries activates YOUR VOICE and communication. This is YOUR power week to be heard. Mercury-Mars-Saturn all amplify your communication. Venus-Uranus in your 4th disrupts home and family. What you value at home is changing. Uranus in your 8th for 7 years brings depth, power, and transformation.",
+                keywords: "Communication, ideas, voice, writing, teaching, wisdom, influence"
+            }
+        },
+        "Pisces": {
+            "2nd House (Money, Possessions, Values)": {
+                main: "New Moon in Aries activates money and values. Financial courage emerges. Venus-Uranus in your 3rd disrupts communication and learning. How you want to learn and express yourself is changing. Uranus in your 7th for 7 years brings relationship revolution and partnership transformation.",
+                keywords: "Money, values, self-worth, resources, financial courage, abundance"
+            }
+        }
+    };
+
+    var tabButtons = document.querySelectorAll('.tab-btn');
+    var tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var tabName = this.getAttribute('data-tab');
+            
+            tabButtons.forEach(function(btn) { btn.classList.remove('active'); });
+            tabContents.forEach(function(content) { content.classList.remove('active'); });
+            
+            this.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        });
+    });
+
+    var signButtons = document.querySelectorAll('.sign-btn');
+    var housesContent = document.getElementById('housesContent');
+
+    function populateHouses(sign) {
+        housesContent.innerHTML = '';
+        var houses = houseData[sign];
+        
+        for (var houseName in houses) {
+            if (houses.hasOwnProperty(houseName)) {
+                var houseInfo = houses[houseName];
+                var card = document.createElement('div');
+                card.className = 'house-card';
+                card.innerHTML = '<div class="house-header">' + houseName + '</div><div class="house-content">' + houseInfo.main + '</div><div class="keywords"><strong>Keywords:</strong> ' + houseInfo.keywords + '</div>';
+                housesContent.appendChild(card);
+            }
+        }
+    }
+
+    populateHouses('Pisces');
+    document.querySelector('[data-sign="Pisces"]').classList.add('active');
+
+    signButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var sign = this.getAttribute('data-sign');
+            
+            signButtons.forEach(function(btn) { btn.classList.remove('active'); });
+            this.classList.add('active');
+            
+            populateHouses(sign);
+        });
+    });
+</script>
