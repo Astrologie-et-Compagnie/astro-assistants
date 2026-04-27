@@ -1,0 +1,804 @@
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #f5f3f0 0%, #ede9e4 100%);
+        color: #2c2c2c;
+        line-height: 1.6;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(44, 44, 44, 0.08);
+        overflow: hidden;
+    }
+
+    .header {
+        background: linear-gradient(135deg, #203a4d 0%, #1a2f3f 100%);
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+    }
+
+    .header h1 {
+        font-size: 2.2em;
+        font-weight: 600;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+    }
+
+    .header p {
+        font-size: 1.1em;
+        opacity: 0.95;
+        font-weight: 300;
+    }
+
+    .cosmic-badge {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 8px 16px;
+        border-radius: 20px;
+        margin-top: 12px;
+        font-size: 0.95em;
+        font-weight: 500;
+    }
+
+    .intensity-marker {
+        background: rgba(220, 53, 69, 0.15);
+        border: 2px solid #dc3545;
+        border-radius: 12px;
+        padding: 20px 30px;
+        margin: 30px;
+        text-align: center;
+    }
+
+    .intensity-label {
+        font-size: 0.85em;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #dc3545;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .intensity-text {
+        font-size: 1.3em;
+        color: #3c3c3c;
+        font-weight: 600;
+    }
+
+    .intensity-description {
+        font-size: 0.95em;
+        color: #5a5a5a;
+        margin-top: 12px;
+        font-style: italic;
+    }
+
+    .tabs {
+        display: flex;
+        border-bottom: 2px solid #e8e4df;
+        background: #fafaf8;
+    }
+
+    .tab-btn {
+        flex: 1;
+        padding: 18px 20px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: 500;
+        color: #203a4d;
+        transition: all 0.3s ease;
+        position: relative;
+        text-align: center;
+    }
+
+    .tab-btn:hover {
+        background: rgba(32, 58, 77, 0.05);
+        color: #3c3c3c;
+    }
+
+    .tab-btn.active {
+        color: #203a4d;
+        border-bottom: 3px solid #203a4d;
+        margin-bottom: -2px;
+    }
+
+    .tab-content {
+        display: none;
+        padding: 40px 30px;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-title {
+        font-size: 1.4em;
+        font-weight: 600;
+        color: #3c3c3c;
+        margin-bottom: 24px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #e8e4df;
+    }
+
+    .rising-sign-selector {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+        margin-bottom: 30px;
+    }
+
+    .sign-btn {
+        padding: 12px 16px;
+        border: 2px solid #d4ccc4;
+        background: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        color: #203a4d;
+        transition: all 0.3s ease;
+        font-size: 0.95em;
+    }
+
+    .sign-btn:hover {
+        border-color: #203a4d;
+        background: rgba(32, 58, 77, 0.05);
+    }
+
+    .sign-btn.active {
+        background: #203a4d;
+        color: white;
+        border-color: #203a4d;
+    }
+
+    .house-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        margin-bottom: 30px;
+    }
+
+    .house-card {
+        background: linear-gradient(135deg, #fafaf8 0%, #f3f0ed 100%);
+        border: 1px solid #e8e4df;
+        border-radius: 12px;
+        padding: 24px;
+        transition: all 0.3s ease;
+    }
+
+    .house-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(44, 44, 44, 0.08);
+        border-color: #203a4d;
+    }
+
+    .house-header {
+        font-size: 1.1em;
+        font-weight: 600;
+        color: #203a4d;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .house-content {
+        font-size: 0.95em;
+        color: #4a4a4a;
+        line-height: 1.7;
+    }
+
+    .keywords {
+        background: white;
+        padding: 12px 16px;
+        border-left: 3px solid #203a4d;
+        margin-top: 12px;
+        border-radius: 4px;
+        font-size: 0.9em;
+        color: #5a5a5a;
+        font-weight: 500;
+    }
+
+    .ceo-plan {
+        background: linear-gradient(135deg, #fafaf8 0%, #f3f0ed 100%);
+        border: 1px solid #e8e4df;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+
+    .ceo-plan-title {
+        font-size: 1.15em;
+        font-weight: 600;
+        color: #203a4d;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .ceo-do {
+        background: rgba(32, 58, 77, 0.08);
+        padding: 16px;
+        border-left: 3px solid #203a4d;
+        border-radius: 4px;
+        margin-bottom: 16px;
+    }
+
+    .ceo-avoid {
+        background: rgba(220, 53, 69, 0.08);
+        padding: 16px;
+        border-left: 3px solid #dc3545;
+        border-radius: 4px;
+        margin-bottom: 16px;
+    }
+
+    .ceo-label {
+        font-weight: 600;
+        font-size: 0.85em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+        color: #203a4d;
+    }
+
+    .daily-guide {
+        display: grid;
+        gap: 20px;
+    }
+
+    .day-card {
+        border: 1px solid #e8e4df;
+        border-radius: 12px;
+        padding: 24px;
+        background: white;
+        transition: all 0.3s ease;
+    }
+
+    .day-card:hover {
+        border-color: #203a4d;
+        box-shadow: 0 4px 12px rgba(32, 58, 77, 0.1);
+    }
+
+    .day-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #e8e4df;
+    }
+
+    .day-date {
+        font-size: 1.3em;
+        font-weight: 600;
+        color: #203a4d;
+    }
+
+    .day-planet {
+        font-size: 1.8em;
+        opacity: 0.7;
+    }
+
+    .day-transit {
+        font-size: 0.95em;
+        font-weight: 500;
+        color: #203a4d;
+        flex-grow: 1;
+    }
+
+    .day-content {
+        color: #4a4a4a;
+        line-height: 1.8;
+    }
+
+    .day-content p {
+        margin-bottom: 12px;
+    }
+
+    .day-insight {
+        background: rgba(32, 58, 77, 0.05);
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-top: 12px;
+        font-size: 0.95em;
+        font-style: italic;
+        color: #5a5a5a;
+    }
+
+    .ceo-commitment {
+        background: linear-gradient(135deg, #fafaf8 0%, #f3f0ed 100%);
+        border: 2px solid #203a4d;
+        border-radius: 12px;
+        padding: 24px;
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .commitment-label {
+        font-size: 0.85em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #203a4d;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+    .commitment-text {
+        font-size: 1.1em;
+        color: #3c3c3c;
+        font-weight: 500;
+        line-height: 1.6;
+    }
+
+    .footer {
+        background: #fafaf8;
+        padding: 24px 30px;
+        border-top: 1px solid #e8e4df;
+        text-align: center;
+        font-size: 0.9em;
+        color: #888;
+    }
+
+    .note {
+        background: rgba(32, 58, 77, 0.05);
+        padding: 16px;
+        border-left: 3px solid #203a4d;
+        border-radius: 4px;
+        margin: 20px 0;
+        font-size: 0.95em;
+        color: #5a5a5a;
+    }
+
+    .transit-dates {
+        background: white;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 3px solid #a68e45;
+        font-size: 0.95em;
+    }
+
+    .transit-date-item {
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #203a4d;
+    }
+
+    .transit-date-item:last-child {
+        margin-bottom: 0;
+    }
+</style>
+
+<div class="container">
+    <div class="header">
+        <h1>🌙 AstroAssistant</h1>
+        <p>Your Cosmic Intelligence for the Week of April 27 – May 3, 2026</p>
+        <div class="cosmic-badge">First Quarter Virgo | Venus Trine Pluto | Full Moon in Scorpio | Words That Heal</div>
+    </div>
+
+    <div class="intensity-marker">
+        <div class="intensity-label">⚡ Cosmic Intensity This Week</div>
+        <div class="intensity-text">VERY HIGH (8/10)</div>
+        <div class="intensity-description">First Quarter Moon wants action and completion. Venus-Pluto brings depth, passion, and transformative intimacy. Full Moon in Scorpio is POWERFUL—purging, vulnerability, shadow work. Mercury-Chiron makes words healing. This is a week of going DEEP and sharing your truth.</div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="houses">Houses & Activation</button>
+        <button class="tab-btn" data-tab="ceo">CEO Plan</button>
+        <button class="tab-btn" data-tab="daily">Daily Guide</button>
+    </div>
+
+    <!-- HOUSES & ACTIVATION TAB -->
+    <div id="houses" class="tab-content active">
+        <div class="section-title">Houses Activated This Week</div>
+
+        <div class="note">
+            <strong>Rising Sign Selection:</strong> This week brings a First Quarter Moon demanding action, Venus-Pluto inviting depth and transformation, and a Full Moon in Scorpio asking you to purge and be vulnerable. Choose your Rising Sign to see where these powerful energies are activating your chart.
+        </div>
+
+        <div class="rising-sign-selector" id="signSelector">
+            <button class="sign-btn" data-sign="Aries">♈ Aries Rising</button>
+            <button class="sign-btn" data-sign="Taurus">♉ Taurus Rising</button>
+            <button class="sign-btn" data-sign="Gemini">♊ Gemini Rising</button>
+            <button class="sign-btn" data-sign="Cancer">♋ Cancer Rising</button>
+            <button class="sign-btn" data-sign="Leo">♌ Leo Rising</button>
+            <button class="sign-btn" data-sign="Virgo">♍ Virgo Rising</button>
+            <button class="sign-btn" data-sign="Libra">♎ Libra Rising</button>
+            <button class="sign-btn" data-sign="Scorpio">♏ Scorpio Rising</button>
+            <button class="sign-btn" data-sign="Sagittarius">♐ Sagittarius Rising</button>
+            <button class="sign-btn" data-sign="Capricorn">♑ Capricorn Rising</button>
+            <button class="sign-btn" data-sign="Aquarius">♒ Aquarius Rising</button>
+            <button class="sign-btn" data-sign="Pisces">♓ Pisces Rising</button>
+        </div>
+
+        <div class="transit-dates">
+            <div class="transit-date-item">🌓 <strong>April 27:</strong> First Quarter Moon in Virgo – Execute. Organize. Get things DONE. Momentum building.</div>
+            <div class="transit-date-item">♀△♇ <strong>April 27-29:</strong> Venus Trine Pluto – Depth. Passion. Intimacy. Transformation. Go deeper in relationships and finances.</div>
+            <div class="transit-date-item">🌔 <strong>April 28:</strong> Waxing Gibbous in Libra – Edit. Polish. Network. Get fresh eyes on your work.</div>
+            <div class="transit-date-item">🌔 <strong>April 30:</strong> Waxing Gibbous in Scorpio – Dive deep into fears. Shadow work. What's blocking you?</div>
+            <div class="transit-date-item">☿☌♃ <strong>April 30-May 2:</strong> Mercury Conjunct Chiron – Words heal. Share your vulnerable truth. Speak what others are afraid to say.</div>
+            <div class="transit-date-item">🌕 <strong>May 1:</strong> Full Moon in Scorpio – RELEASE. PURGE. REBIRTH. Vulnerability is strength. Let masks fall.</div>
+            <div class="transit-date-item">☿ <strong>May 2+:</strong> Mercury enters Taurus – Grounded thinking. Solid plans. Sign contracts. Build what's real.</div>
+        </div>
+
+        <div id="housesContent" class="house-grid">
+            <!-- JavaScript populates this based on Rising Sign selection -->
+        </div>
+    </div>
+
+    <!-- CEO PLAN TAB -->
+    <div id="ceo" class="tab-content">
+        <div class="section-title">CEO Plan: April 27 – May 3</div>
+
+        <div class="ceo-plan">
+            <div class="ceo-plan-title">📊 The Cosmic Forecast for Your Leadership</div>
+            <p style="margin-bottom: 20px; color: #5a5a5a;">
+                This week is about <strong>getting things DONE while going DEEP.</strong> The First Quarter Moon demands action and completion. You're executing the plans you made. But Venus-Pluto asks you to FEEL while you work. To go deeper. To be more passionate. And the Full Moon in Scorpio asks you to RELEASE what no longer serves—masks, fears, illusions.
+            </p>
+            <p style="color: #5a5a5a;">
+                This is a week to share your truth. Mercury-Chiron makes your words HEALING. The things you're afraid to say? Say them. The vulnerability you're hiding? Show it. Your people need to see your real self. That's where connection happens. That's where transformation begins.
+            </p>
+        </div>
+
+        <div class="ceo-plan">
+            <div class="ceo-plan-title">✅ DO This Week (Aligned Actions)</div>
+            <div class="ceo-do">
+                <div class="ceo-label">Execute Your Plans (April 27)</div>
+                <p>First Quarter Moon wants completion. What needs to get DONE this week? Not next week. THIS week. Break it down. Do it. Momentum builds when you finish things.</p>
+            </div>
+            <div class="ceo-do">
+                <div class="ceo-label">Go Deeper in Relationships & Money (April 27-29)</div>
+                <p>Venus-Pluto brings transformative energy to intimacy and finances. This is not surface-level energy. Are your business relationships as deep as they could be? Is your money strategy as solid as it could be? Go deeper. Invest in what matters.</p>
+            </div>
+            <div class="ceo-do">
+                <div class="ceo-label">Polish Your Work (April 28)</div>
+                <p>Waxing Gibbous in Libra asks: Get fresh eyes on your content, your graphics, your offers. What needs refining? What's almost ready but not quite? Polish it. Make it beautiful.</p>
+            </div>
+            <div class="ceo-do">
+                <div class="ceo-label">Face Your Fears (April 30)</div>
+                <p>Waxing Gibbous in Scorpio dives DEEP. What fears are blocking you? What are you afraid to look at? This is shadow work time. Get honest. The Full Moon will amplify whatever you're willing to see.</p>
+            </div>
+            <div class="ceo-do">
+                <div class="ceo-label">Share Your Vulnerable Truth (April 30-May 2)</div>
+                <p>Mercury-Chiron makes your words HEALING. The things you've learned from your wounds? Share them. The struggles you've overcome? Talk about them. Your vulnerability is your superpower. Your people are waiting for you to be REAL.</p>
+            </div>
+            <div class="ceo-do">
+                <div class="ceo-label">Release & Rebirth (May 1)</div>
+                <p>Full Moon in Scorpio is RELEASE time. What's no longer working? What masks are you wearing? What beliefs are limiting? LET THEM GO. This is rebirth energy. You're becoming NEW.</p>
+            </div>
+            <div class="ceo-do">
+                <div class="ceo-label">Ground & Build (May 2+)</div>
+                <p>Mercury in Taurus brings grounded, practical thinking. Make solid plans. Sign contracts. Build what's REAL and lasting. The transformation is real. Now make it tangible.</p>
+            </div>
+        </div>
+
+        <div class="ceo-plan">
+            <div class="ceo-plan-title">⚠️ AVOID or Navigate Carefully</div>
+            <div class="ceo-avoid">
+                <div class="ceo-label">Don't Rush Through Execution</div>
+                <p>First Quarter Moon wants speed, but Venus-Pluto wants depth. Don't sacrifice quality for completion. Take time to do things RIGHT.</p>
+            </div>
+            <div class="ceo-avoid">
+                <div class="ceo-label">Don't Go Too Deep Too Fast</div>
+                <p>Scorpio Full Moon can make you want to bare all at once. Be strategic about vulnerability. Share what's real, but protect what needs protecting.</p>
+            </div>
+            <div class="ceo-avoid">
+                <div class="ceo-label">Don't Make Major Financial Decisions Under Emotion</div>
+                <p>Venus-Pluto can make relationships and money feel INTENSE. Get grounded before committing to big financial moves. Wait for Mercury in Taurus clarity.</p>
+            </div>
+            <div class="ceo-avoid">
+                <div class="ceo-label">Don't Share Just to Shock</div>
+                <p>Mercury-Chiron makes words healing, not just provocative. Share your truth because it HELPS, not because it's edgy. There's a difference.</p>
+            </div>
+        </div>
+
+        <div class="ceo-commitment">
+            <div class="commitment-label">Your One CEO Commitment This Week</div>
+            <div class="commitment-text">
+                "I will finish what I started. I will go deeper in what matters. I will face what scares me. I will share my real truth—the wounds, the wisdom, the transformation. And I will release what's not serving me anymore. I am becoming real. I am becoming FREE."
+            </div>
+        </div>
+    </div>
+
+    <!-- DAILY GUIDE TAB -->
+    <div id="daily" class="tab-content">
+        <div class="section-title">Day-by-Day Breakdown (April 27 – May 3)</div>
+
+        <div class="daily-guide">
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-date">Sunday, April 27</div>
+                    <div class="day-planet">🌓 ♀</div>
+                    <div class="day-transit">First Quarter Moon Virgo + Venus Trine Pluto begins</div>
+                </div>
+                <div class="day-content">
+                    <p><strong>Theme: Execute With Passion. Go Deep. Build Momentum.</strong></p>
+                    <p>First Quarter Moon in Virgo wants ACTION and COMPLETION. You have energy. You have focus. GET THINGS DONE. Simultaneously, Venus-Pluto brings depth to everything you touch—relationships, money, creative work. Don't just execute. Do it with PASSION. Do it DEEPLY.</p>
+                    <p><strong>CEO Translation:</strong> This is your power day. Finish projects. Make progress. But don't make it mechanical. Put your HEART into your work. Go deeper in your relationships.</p>
+                    <div class="day-insight">💡 Execution + Passion + Depth = Sustainable results.</div>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-date">Monday, April 28</div>
+                    <div class="day-planet">🌔 ☾</div>
+                    <div class="day-transit">Waxing Gibbous in Libra + Moon Sextile Jupiter (early morning)</div>
+                </div>
+                <div class="day-content">
+                    <p><strong>Theme: Polish & Perfect. Network. Get Fresh Eyes.</strong></p>
+                    <p>Waxing Gibbous in Libra is about REFINEMENT. Get feedback. Polish your work. Network. Bring people in. This moon loves balance, beauty, relationships. Moon Sextile Jupiter brings expansive, generous energy. People feel good. They're open.</p>
+                    <p><strong>CEO Translation:</strong> Share your almost-finished work. Ask for feedback. Network. Launch if you're ready. People are receptive today. Also: Venus-Pluto still strong—go deeper in conversations, not just surface small talk.</p>
+                    <div class="day-insight">💡 Refinement comes before launch. Get it right.</div>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-date">Tuesday, April 29</div>
+                    <div class="day-planet">🌔 ♀</div>
+                    <div class="day-transit">Waxing Gibbous in Libra continues + Venus Trine Pluto (peak)</div>
+                </div>
+                <div class="day-content">
+                    <p><strong>Theme: Transform Through Connection. Depth in Relationships.</strong></p>
+                    <p>Venus-Pluto reaches its PEAK. This is POWERFUL. Intimacy deepens. Money situations transform. Relationships go to new levels. This isn't light energy. It's INTENSE and REAL. You're willing to be vulnerable. Others are too.</p>
+                    <p><strong>CEO Translation:</strong> Have the deep conversation. Invest in what matters. Strengthen partnerships. Be honest about money and intimacy. This is transformative energy if you use it consciously.</p>
+                    <div class="day-insight">💡 Depth creates lasting bonds.</div>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-date">Wednesday, April 30</div>
+                    <div class="day-planet">🌔 ☿</div>
+                    <div class="day-transit">Waxing Gibbous in Scorpio + Mercury Conjunct Chiron begins</div>
+                </div>
+                <div class="day-content">
+                    <p><strong>Theme: Shadow Work. Words That Heal. Go Deep Into Fear.</strong></p>
+                    <p>Moon shifts to Scorpio—DEEP energy. You want to understand what's blocking you. What fears live in your shadow? Mercury-Chiron makes words HEALING. The things you're afraid to say? Your people NEED to hear them. The wounds you've overcome? They're your teaching tools.</p>
+                    <p><strong>CEO Translation:</strong> Journal about your fears. Prepare to share your vulnerable truth. Your wounds are not weakness. They're wisdom. Get ready for Full Moon tomorrow.</p>
+                    <div class="day-insight">💡 Your pain becomes your purpose.</div>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-date">Thursday, May 1</div>
+                    <div class="day-planet">🌕 ♏</div>
+                    <div class="day-transit">Full Moon in Scorpio — RELEASE. PURGE. REBIRTH.</div>
+                </div>
+                <div class="day-content">
+                    <p><strong>Theme: Maximum Intensity. Vulnerability Is Strength. Let Masks Fall.</strong></p>
+                    <p>FULL MOON IN SCORPIO. This is POWERFUL. Maximum intensity. This is about RELEASE—letting go of what no longer serves. Masks. Fear. Illusions. Secrets you've been keeping. This Full Moon asks: Who are you without the pretense? What's the REAL you?</p>
+                    <p>This is rebirth energy. You're becoming new. But first you must release the old. Be vulnerable. Be honest. Show your real self. Your people will respect you MORE for it.</p>
+                    <p><strong>CEO Translation:</strong> This is your POWER day to be authentically you. Share what scares you. Release what weighs you down. Lead from your wound-turned-wisdom. This is transformation.</p>
+                    <div class="day-insight">💡 You are not broken. You are WHOLE. All of you.</div>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-date">Friday, May 2</div>
+                    <div class="day-planet">☿ ♉</div>
+                    <div class="day-transit">Mercury enters Taurus + Moon Trine Jupiter</div>
+                </div>
+                <div class="day-content">
+                    <p><strong>Theme: Ground The Transformation. Practical Planning. Build What's Real.</strong></p>
+                    <p>Mercury enters Taurus—practical, grounded, steady thinking. Yesterday was Full Moon intensity and release. Today brings clarity and stability. Mercury-Taurus makes you think about what's REAL, what's SUSTAINABLE, what's SOLID. Moon Trine Jupiter brings uplifting, supportive energy.</p>
+                    <p><strong>CEO Translation:</strong> Make solid plans. Sign contracts. The transformation is real—now make it tangible. Build systems. Create structure. Ground the new version of yourself into reality.</p>
+                    <div class="day-insight">💡 Vision + Strategy + Action = Real change.</div>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-date">Saturday, May 3</div>
+                    <div class="day-planet">🌕 ♂</div>
+                    <div class="day-transit">Full Moon energy continues + Mars Square Jupiter begins</div>
+                </div>
+                <div class="day-content">
+                    <p><strong>Theme: Integration. Vision Meets Action. New Momentum.</strong></p>
+                    <p>Full Moon energy is settling. You've released. You've purged. You've rebirthed. Now Mars-Jupiter wants you to take BOLD ACTION on your new vision. This isn't reckless—it's strategic boldness. You have the energy. You have the clarity. MOVE.</p>
+                    <p><strong>CEO Translation:</strong> Take action on what the Full Moon revealed. The old you is gone. The new you is HERE. Build on that transformation. Don't hesitate.</p>
+                    <div class="day-insight">💡 You are ready. Move forward with confidence.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>🌙 <strong>The Cozy Astro HQ</strong> | Premium AstroAssistant for Architect Members</p>
+        <p style="margin-top: 12px;">Source of Truth: Moonsight Digital Calendar | Transits Verified</p>
+        <p style="margin-top: 12px; font-size: 0.85em; opacity: 0.7;">This is cosmic intelligence for strategic living—not fortune-telling. You are always the CEO of your choices. The map is only useful if you know where you're standing. Calm is not passive. It's the most powerful place to lead from.</p>
+    </div>
+</div>
+
+<script>
+    var houseData = {
+        "Aries": {
+            "6th House (Work, Health, Daily Practice)": {
+                main: "First Quarter Moon activates your work zone. Execute. Complete projects. Your health routines matter. Venus-Pluto deepens work relationships and brings passion to what you do. Full Moon in Scorpio here asks: What unhealthy patterns are you releasing at work?",
+                keywords: "Work, health, daily practice, implementation, optimization, routines"
+            },
+            "8th House (Shared Resources, Intimacy, Depth)": {
+                main: "Venus-Pluto is POWERFUL here. Shared finances transform. Intimacy deepens. You're ready to go deeper. Full Moon in Scorpio illuminates what's hidden. Secrets emerge. What needs to be faced in shared resources or intimate relationships?",
+                keywords: "Shared resources, intimacy, depth, honesty, transformation, power"
+            }
+        },
+        "Taurus": {
+            "5th House (Creativity, Romance, Joy)": {
+                main: "First Quarter Moon activates creativity and romance. Create. Play. Express yourself. Venus-Pluto brings depth and passion to romantic/creative projects. Full Moon in Scorpio asks: What fears block your creative expression?",
+                keywords: "Creativity, romance, joy, creative expression, pleasure, passion"
+            },
+            "7th House (Partnerships, Contracts, 1:1)": {
+                main: "Venus-Pluto here brings TRANSFORMATION to partnerships. Relationships go deeper. Contracts are signed or renegotiated. Full Moon in Scorpio asks: Who are you WITHOUT the partnership mask? What do YOU want?",
+                keywords: "Partnerships, authenticity, contracts, marriage, honest relating, depth"
+            }
+        },
+        "Gemini": {
+            "4th House (Home, Family, Foundations)": {
+                main: "First Quarter Moon activates home and family. Projects begin. Venus-Pluto brings intensity to home matters and family relationships. Full Moon in Scorpio asks: What family patterns are you ready to release?",
+                keywords: "Home, family, foundations, belonging, emotional security, roots"
+            },
+            "6th House (Work, Health, Daily Practice)": {
+                main: "Venus-Pluto deepens your work and health. Get serious about what matters. Full Moon in Scorpio illuminates what's unhealthy in your routines. What needs to change?",
+                keywords: "Work, health, daily practice, implementation, optimization, routines"
+            }
+        },
+        "Cancer": {
+            "3rd House (Communication, Ideas, Voice)": {
+                main: "First Quarter Moon activates YOUR VOICE. Speak. Write. Communicate. Venus-Pluto brings depth to communication. Say what matters. Mercury-Chiron makes your words HEALING. Full Moon in Scorpio amplifies your power to speak truth.",
+                keywords: "Communication, ideas, voice, writing, teaching, wisdom, influence"
+            },
+            "5th House (Creativity, Romance, Joy)": {
+                main: "Venus-Pluto brings passion and depth to your creative work and romance. Full Moon in Scorpio asks: What creative blocks are fear-based? Release them.",
+                keywords: "Creativity, romance, joy, creative expression, pleasure, passion, play"
+            }
+        },
+        "Leo": {
+            "2nd House (Money, Values, Security)": {
+                main: "First Quarter Moon activates money and values. Get clear on what you're worth. Venus-Pluto brings transformation to finances. Full Moon in Scorpio asks: What beliefs about money are limiting you? Release them.",
+                keywords: "Money, values, self-worth, resources, financial courage, abundance"
+            },
+            "4th House (Home, Family, Foundations)": {
+                main: "Venus-Pluto deepens family bonds and home matters. Full Moon in Scorpio brings emotional depth to family dynamics. What's hidden in your family story?",
+                keywords: "Home, family, foundations, belonging, emotional security, roots"
+            }
+        },
+        "Virgo": {
+            "1st House (Self, Identity, New Beginnings)": {
+                main: "First Quarter Moon in YOUR SIGN demands action on self-improvement. Get things DONE. Venus-Pluto transforms how others see you. Full Moon in Scorpio shows you your REAL self—without masks. Embrace it.",
+                keywords: "Self, identity, new beginnings, personal rebirth, presence, courage"
+            },
+            "3rd House (Communication, Ideas, Voice)": {
+                main: "Venus-Pluto makes your communication DEEP and POWERFUL. Mercury-Chiron makes your words HEALING. Full Moon in Scorpio activates your voice. Speak your truth.",
+                keywords: "Communication, ideas, voice, writing, teaching, wisdom, influence"
+            }
+        },
+        "Libra": {
+            "12th House (Spirituality, Behind Scenes, Rest)": {
+                main: "First Quarter Moon activates spiritual work and inner rest. Take time for meditation, dreams, reflection. Venus-Pluto deepens spiritual understanding. Full Moon in Scorpio brings subconscious material to surface. What needs integrating?",
+                keywords: "Spirituality, inner work, dreams, subconscious, rest, release, integration"
+            },
+            "2nd House (Money, Possessions, Values)": {
+                main: "Venus-Pluto transforms what you value and how you relate to money. Full Moon in Scorpio asks: What financial fears are limiting you? What's your true worth?",
+                keywords: "Money, values, self-worth, resources, financial courage, abundance"
+            }
+        },
+        "Scorpio": {
+            "11th House (Community, Groups, Friendships)": {
+                main: "First Quarter Moon activates community and groups. Build collaborations. Venus-Pluto deepens friendships and networks. Full Moon in YOUR SIGN is POWERFUL. This is YOUR release point. What are you ready to let go of? Who are you becoming?",
+                keywords: "Community, collaboration, groups, networks, friendship, belonging"
+            },
+            "1st House (Self, Identity, New Beginnings)": {
+                main: "Venus-Pluto brings depth and transformation to how you see yourself. Full Moon in YOUR SIGN (Scorpio) is MAXIMUM POWER. You are REBORN. Release old identity. Claim new self.",
+                keywords: "Self, identity, new beginnings, personal rebirth, presence, courage, power"
+            }
+        },
+        "Sagittarius": {
+            "10th House (Career, Public Image, Authority)": {
+                main: "First Quarter Moon activates career and public presence. Make moves. Get visibility. Venus-Pluto brings transformation to your professional role. Full Moon in Scorpio activates your 12th—rest and integration before next cycle.",
+                keywords: "Career, authority, public presence, professional boldness, visibility"
+            },
+            "11th House (Community, Groups, Networks)": {
+                main: "Venus-Pluto deepens your networks and community role. Full Moon in Scorpio asks: What group dynamics need releasing? What community relationships need deepening?",
+                keywords: "Community, collaboration, groups, networks, friendship, belonging"
+            }
+        },
+        "Capricorn": {
+            "9th House (Learning, Travel, Philosophy)": {
+                main: "First Quarter Moon activates learning and expansion. Study. Learn. Travel calls. Venus-Pluto brings depth to your philosophy and worldview. Full Moon in Scorpio shows what beliefs need releasing.",
+                keywords: "Learning, travel, wisdom, philosophy, expansion, education, adventure"
+            },
+            "10th House (Career, Public Image, Authority)": {
+                main: "Venus-Pluto brings transformation to your career. Full Moon in Scorpio activates public release—what do you need to stop hiding about your work?",
+                keywords: "Career, authority, public presence, professional boldness, visibility"
+            }
+        },
+        "Aquarius": {
+            "8th House (Shared Resources, Intimacy, Depth)": {
+                main: "First Quarter Moon activates shared resources and intimacy. Full Moon in Scorpio is RIGHT HERE. Maximum intensity. Go DEEP. Transform finances, intimacy, shared power dynamics. This is your release point.",
+                keywords: "Shared resources, intimacy, depth, honesty, transformation, power"
+            },
+            "9th House (Learning, Travel, Philosophy)": {
+                main: "Venus-Pluto brings depth to learning and philosophy. Full Moon in Scorpio activates your 9th—what beliefs are limiting your expansion?",
+                keywords: "Learning, travel, wisdom, philosophy, expansion, education, adventure"
+            }
+        },
+        "Pisces": {
+            "7th House (Partnerships, Contracts, 1:1)": {
+                main: "First Quarter Moon activates partnerships. Make relationship moves. Venus-Pluto deepens intimacy and commitment. Full Moon in Scorpio shows partnership truth—what needs to be faced? What masks can fall?",
+                keywords: "Partnerships, authenticity, contracts, marriage, honest relating, depth"
+            },
+            "8th House (Shared Resources, Intimacy, Depth)": {
+                main: "Venus-Pluto brings transformation to shared resources and intimate connection. Full Moon in Scorpio asks: What hidden resentments need releasing? What shared power dynamics need honesty?",
+                keywords: "Shared resources, intimacy, depth, honesty, transformation, power"
+            }
+        }
+    };
+
+    var tabButtons = document.querySelectorAll('.tab-btn');
+    var tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var tabName = this.getAttribute('data-tab');
+            
+            tabButtons.forEach(function(btn) { btn.classList.remove('active'); });
+            tabContents.forEach(function(content) { content.classList.remove('active'); });
+            
+            this.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        });
+    });
+
+    var signButtons = document.querySelectorAll('.sign-btn');
+    var housesContent = document.getElementById('housesContent');
+
+    function populateHouses(sign) {
+        housesContent.innerHTML = '';
+        var houses = houseData[sign];
+        
+        for (var houseName in houses) {
+            if (houses.hasOwnProperty(houseName)) {
+                var houseInfo = houses[houseName];
+                var card = document.createElement('div');
+                card.className = 'house-card';
+                card.innerHTML = '<div class="house-header">' + houseName + '</div><div class="house-content">' + houseInfo.main + '</div><div class="keywords"><strong>Keywords:</strong> ' + houseInfo.keywords + '</div>';
+                housesContent.appendChild(card);
+            }
+        }
+    }
+
+    populateHouses('Pisces');
+    document.querySelector('[data-sign="Pisces"]').classList.add('active');
+
+    signButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var sign = this.getAttribute('data-sign');
+            
+            signButtons.forEach(function(btn) { btn.classList.remove('active'); });
+            this.classList.add('active');
+            
+            populateHouses(sign);
+        });
+    });
+</script>
