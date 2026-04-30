@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MoonAssistant May 2026 | Cozy Astro</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@200;300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0d1b2a;--navy-light:#1e2d42;
+  --gold:#c9a84c;--gold-light:#e8c97a;--gold-pale:#f5e9c9;
+  --teal:#2a7f8a;--teal-light:#3fa8b5;
+  --white:#fff;--text-light:rgba(255,255,255,.85);--text-muted:rgba(255,255,255,.5);
+  --glass:rgba(255,255,255,.05);--gb:rgba(201,168,76,.2);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"Josefin Sans",sans-serif;background:var(--navy);color:var(--white);min-height:100vh;overflow-x:hidden;}
+#sf{position:fixed;inset:0;pointer-events:none;z-index:0;}
+.star{position:absolute;border-radius:50%;background:#fff;animation:tw var(--d,4s) ease-in-out infinite alternate;animation-delay:var(--dl,0s);}
+@keyframes tw{from{opacity:.03;transform:scale(.8);}to{opacity:var(--op,.25);transform:scale(1.2);}}
+.wrap{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 18px 80px;}
+.hdr{text-align:center;padding:44px 20px 28px;}
+.brand-lbl{font-weight:200;font-size:11px;letter-spacing:.35em;color:var(--teal-light);text-transform:uppercase;margin-bottom:14px;}
+.main-title{font-family:"Cormorant Garamond",serif;font-size:clamp(40px,8vw,64px);font-weight:300;color:var(--gold-light);line-height:1.1;}
+.main-title em{font-style:italic;color:#fff;}
+.sub{font-weight:300;font-size:12px;letter-spacing:.28em;color:var(--text-muted);text-transform:uppercase;margin-top:10px;}
+.rule{width:70px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:16px auto 0;}
+/* RISING SELECTOR */
+#rising-screen{padding:20px 0;}
+.rs-intro{font-family:"Cormorant Garamond",serif;font-size:20px;font-style:italic;color:var(--text-light);line-height:1.7;text-align:center;margin-bottom:24px;padding:0 10px;}
+.rs-label{font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--teal-light);text-align:center;margin-bottom:14px;display:block;}
+.sign-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;}
+.sign-btn{background:var(--glass);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px 8px;cursor:pointer;transition:all .25s;text-align:center;font-family:"Cormorant Garamond",serif;font-size:20px;color:var(--gold-light);}
+.sign-btn:hover{border-color:var(--gold);background:rgba(201,168,76,.1);transform:translateY(-2px);}
+.sign-btn.active{border-color:var(--gold);background:linear-gradient(135deg,rgba(201,168,76,.2),rgba(42,127,138,.12));box-shadow:0 0 16px rgba(201,168,76,.2);}
+/* MAIN APP */
+#main-app{display:none;}
+.srb{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,rgba(201,168,76,.12),rgba(42,127,138,.08));border:1px solid var(--gb);border-radius:12px;padding:12px 18px;margin-bottom:18px;}
+.srb-left{font-family:"Cormorant Garamond",serif;font-size:20px;color:var(--gold-light);}
+.srb-left em{font-style:italic;}
+.srb-change{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--teal-light);cursor:pointer;border:1px solid rgba(63,168,181,.3);border-radius:20px;padding:5px 12px;background:transparent;}
+.srb-change:hover{background:rgba(63,168,181,.1);}
+/* TABS */
+.tabs{display:flex;gap:4px;margin-bottom:20px;background:rgba(0,0,0,.3);border-radius:12px;padding:4px;border:1px solid var(--gb);flex-wrap:wrap;}
+.tb{flex:1;min-width:70px;padding:10px 5px;background:transparent;border:none;color:var(--text-muted);font-family:"Josefin Sans",sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border-radius:8px;transition:all .3s;}
+.tb:hover{color:var(--gold-light);}
+.tb.on{background:linear-gradient(135deg,var(--navy-light),rgba(201,168,76,.14));color:var(--gold-light);border:1px solid var(--gb);}
+.panel{display:none;}
+.panel.on{display:block;animation:fi .4s ease;}
+@keyframes fi{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+/* CARDS */
+.card{background:var(--glass);border:1px solid var(--gb);border-radius:14px;padding:20px;margin-bottom:14px;}
+.card-title{font-family:"Cormorant Garamond",serif;font-size:24px;font-weight:400;color:var(--gold-light);margin-bottom:4px;}
+.card-sub{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal-light);margin-bottom:14px;}
+/* PHASE PILLS */
+.phase-strip{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.phase-pill{background:var(--glass);border:1px solid var(--gb);border-radius:40px;padding:12px 16px;display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;min-width:120px;}
+.phase-pill.super{border-color:var(--gold);box-shadow:0 0 18px rgba(201,168,76,.28);}
+.pp-date{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-muted);}
+.pp-name{font-family:"Cormorant Garamond",serif;font-size:16px;color:var(--gold-light);text-align:center;line-height:1.3;}
+.pp-house{font-size:12px;color:var(--teal-light);text-align:center;margin-top:2px;}
+/* MOON GRID */
+.moon-list{display:grid;grid-template-columns:repeat(2,1fr);gap:5px;}
+.moon-item{display:flex;align-items:baseline;gap:8px;font-size:13px;color:var(--text-light);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.moon-dates{color:var(--gold-light);font-size:12px;min-width:78px;flex-shrink:0;}
+/* VOID CHIPS */
+.void-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px;}
+.void-chip{background:rgba(170,50,50,.14);border:1px solid rgba(170,50,50,.28);border-radius:17px;padding:5px 12px;font-size:12px;color:#e08080;}
+/* HOUSE TABLE */
+.htable{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px;}
+.htable th{text-align:left;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-muted);padding:8px;border-bottom:1px solid var(--gb);}
+.htable td{padding:9px 8px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top;line-height:1.55;}
+.h-num{color:var(--gold);font-family:"Cormorant Garamond",serif;font-size:16px;font-weight:300;width:38px;}
+.h-area{color:var(--text-muted);font-size:12px;width:95px;}
+.h-event{color:var(--teal-light);font-size:12px;width:82px;}
+.h-theme{color:var(--text-light);font-size:13px;}
+/* WEEK CARDS */
+.week-card{border:1px solid var(--gb);border-radius:14px;margin-bottom:14px;overflow:hidden;}
+.wk-header{padding:16px 18px;display:flex;justify-content:space-between;align-items:flex-start;cursor:pointer;user-select:none;transition:background .25s;}
+.wk-header:hover{background:rgba(255,255,255,.03);}
+.wk-label{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal-light);margin-bottom:3px;}
+.wk-theme{font-family:"Cormorant Garamond",serif;font-size:21px;color:var(--gold-light);line-height:1.2;}
+.wk-moon{font-size:12px;color:var(--text-muted);margin-top:3px;font-style:italic;}
+.wk-badge{font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:5px 11px;border-radius:16px;flex-shrink:0;margin-left:9px;}
+.badge-high{background:rgba(201,168,76,.2);color:var(--gold-light);border:1px solid rgba(201,168,76,.4);}
+.badge-vhigh{background:rgba(201,168,76,.35);color:var(--gold);border:1px solid var(--gold);box-shadow:0 0 10px rgba(201,168,76,.2);}
+.badge-med{background:rgba(42,127,138,.2);color:var(--teal-light);border:1px solid rgba(42,127,138,.4);}
+.wk-chevron{color:var(--text-muted);font-size:12px;margin-left:6px;transition:transform .3s;flex-shrink:0;align-self:center;}
+.week-card.open .wk-chevron{transform:rotate(180deg);}
+.wk-body{display:none;padding:0 18px 18px;border-top:1px solid var(--gb);}
+.week-card.open .wk-body{display:block;animation:fi .3s ease;}
+.wk-house-ctx{margin-top:14px;padding:12px 14px;background:rgba(42,127,138,.08);border:1px solid rgba(42,127,138,.2);border-radius:10px;font-size:13px;color:var(--teal-light);line-height:1.6;}
+.wk-house-ctx strong{color:var(--gold-light);}
+.da{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px;}
+.do-b,.av-b{border-radius:9px;padding:12px;}
+.do-b{background:rgba(42,127,138,.1);border:1px solid rgba(42,127,138,.25);}
+.av-b{background:rgba(150,60,60,.1);border:1px solid rgba(150,60,60,.22);}
+.box-lbl{font-size:11px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:8px;font-weight:600;}
+.do-b .box-lbl{color:var(--teal-light);}
+.av-b .box-lbl{color:#e08080;}
+.da-list{list-style:none;font-size:13px;color:var(--text-light);line-height:1.6;}
+.da-list li{padding-left:13px;position:relative;padding-bottom:2px;}
+.do-b .da-list li::before{content:"Go";position:absolute;left:0;color:var(--teal-light);font-size:7px;top:3px;}
+.av-b .da-list li::before{content:"No";position:absolute;left:0;color:#e08080;font-size:7px;top:3px;}
+.ceo-mv{margin-top:12px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.28);border-radius:9px;padding:12px;}
+.ceo-lbl{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+.ceo-txt{font-family:"Cormorant Garamond",serif;font-size:17px;font-style:italic;color:var(--gold-pale);line-height:1.5;}
+.wk-perm{margin-top:10px;text-align:center;font-family:"Cormorant Garamond",serif;font-size:16px;font-style:italic;color:var(--text-muted);padding:12px;border-top:1px solid var(--gb);}
+.wk-perm em{color:var(--gold-pale);}
+/* DAILY GUIDE */
+.day-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px;margin-bottom:10px;}
+.day-date{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal-light);margin-bottom:4px;}
+.day-phase{font-family:"Cormorant Garamond",serif;font-size:20px;color:var(--gold-light);margin-bottom:4px;}
+.day-moon{font-size:11px;color:var(--text-muted);margin-bottom:10px;}
+.day-house{font-size:13px;color:var(--teal-light);margin-bottom:10px;padding:8px 12px;background:rgba(42,127,138,.08);border-radius:6px;}
+.day-guidance{font-size:14px;color:var(--text-light);line-height:1.7;margin-bottom:12px;}
+.day-commit{font-family:"Cormorant Garamond",serif;font-size:17px;font-style:italic;color:var(--gold-pale);border-top:1px solid var(--gb);padding-top:12px;margin-top:12px;}
+.day-perm{font-size:13px;color:var(--text-muted);font-style:italic;margin-top:8px;}
+/* CALENDAR */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:12px;}
+.dh{text-align:center;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);padding:6px 0;}
+.dc{background:var(--glass);border:1px solid rgba(255,255,255,.05);border-radius:7px;padding:5px 3px;text-align:center;min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:2px;position:relative;}
+.emp{background:transparent !important;border-color:transparent !important;}
+.dn{font-size:13px;font-weight:300;color:var(--text-light);}
+.dp{font-size:11px;}
+.ds{font-size:9px;color:var(--text-muted);}
+.dv{font-size:8px;color:rgba(255,140,140,.75);background:rgba(140,40,40,.22);border-radius:3px;padding:1px 3px;}
+.dc.fm{border-color:rgba(201,168,76,.55);background:rgba(201,168,76,.09);}
+.dc.nm{border-color:rgba(42,127,138,.55);background:rgba(42,127,138,.08);}
+.dc.qm{border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.04);}
+.dc.sup{box-shadow:0 0 14px rgba(201,168,76,.3);}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.stat{background:var(--glass);border:1px solid var(--gb);border-radius:10px;padding:12px;text-align:center;}
+.sn{font-family:"Cormorant Garamond",serif;font-size:32px;font-weight:300;color:var(--gold-light);line-height:1;}
+.sl{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-muted);margin-top:3px;}
+.intention-box{background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.22);border-radius:12px;padding:17px;margin-top:13px;}
+.it{font-family:"Cormorant Garamond",serif;font-size:21px;font-weight:300;font-style:italic;color:var(--gold-light);margin-bottom:10px;}
+.ip{list-style:none;}
+.ip li{padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:14px;color:var(--text-light);line-height:1.6;}
+.ip li:last-child{border-bottom:none;}
+.pn{color:var(--gold);font-family:"Cormorant Garamond",serif;font-size:14px;margin-right:6px;}
+/* FOOT */
+.foot{text-align:center;padding:28px 0 0;border-top:1px solid var(--gb);margin-top:22px;}
+.foot-brand{font-family:"Cormorant Garamond",serif;font-size:18px;font-style:italic;color:var(--gold-light);margin-bottom:4px;}
+.foot-note{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted);}
+@media(max-width:600px){.sign-grid{grid-template-columns:repeat(3,1fr);}.da{grid-template-columns:1fr;}.moon-list{grid-template-columns:1fr;}.tabs{gap:3px;}.tb{font-size:8px;padding:8px 3px;}}
+</style>
+</head>
+<body>
+<div id="sf"></div>
+<div class="wrap">
+
+<div class="hdr">
+  <div class="brand-lbl">Cozy Astro for Life &amp; Business</div>
+  <h1 class="main-title">MoonAssistant<br><em>May 2026</em></h1>
+  <div class="sub">Your personalised lunar guide for the month</div>
+  <div class="rule"></div>
+</div>
+
+<div id="rising-screen">
+  <p class="rs-intro">Select your Rising Sign once and every piece of guidance in this tool personalises to your house structure for May.</p>
+  <span class="rs-label">What is your Rising Sign?</span>
+  <div class="sign-grid">
+    <div class="sign-btn" data-sign="Aries" onclick="selectRising('Aries')">Aries</div>
+    <div class="sign-btn" data-sign="Taurus" onclick="selectRising('Taurus')">Taurus</div>
+    <div class="sign-btn" data-sign="Gemini" onclick="selectRising('Gemini')">Gemini</div>
+    <div class="sign-btn" data-sign="Cancer" onclick="selectRising('Cancer')">Cancer</div>
+    <div class="sign-btn" data-sign="Leo" onclick="selectRising('Leo')">Leo</div>
+    <div class="sign-btn" data-sign="Virgo" onclick="selectRising('Virgo')">Virgo</div>
+    <div class="sign-btn" data-sign="Libra" onclick="selectRising('Libra')">Libra</div>
+    <div class="sign-btn" data-sign="Scorpio" onclick="selectRising('Scorpio')">Scorpio</div>
+    <div class="sign-btn" data-sign="Sagittarius" onclick="selectRising('Sagittarius')">Sagittarius</div>
+    <div class="sign-btn" data-sign="Capricorn" onclick="selectRising('Capricorn')">Capricorn</div>
+    <div class="sign-btn" data-sign="Aquarius" onclick="selectRising('Aquarius')">Aquarius</div>
+    <div class="sign-btn" data-sign="Pisces" onclick="selectRising('Pisces')">Pisces</div>
+  </div>
+  <p style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:10px;">Your Rising Sign is not your Sun sign. It is determined by your birth time and sets your entire house structure.</p>
+</div>
+
+<div id="main-app">
+  <div class="srb">
+    <div class="srb-left">Reading for: <em id="display-rising"></em> Rising</div>
+    <button class="srb-change" onclick="resetRising()">Change sign</button>
+  </div>
+  <div class="tabs">
+    <button class="tb on" data-tab="houses" onclick="showTab('houses')">Houses</button>
+    <button class="tb" data-tab="ceo" onclick="showTab('ceo')">CEO Plan</button>
+    <button class="tb" data-tab="guide" onclick="showTab('guide')">Daily Guide</button>
+    <button class="tb" data-tab="calendar" onclick="showTab('calendar')">Calendar</button>
+  </div>
+
+  <!-- HOUSES -->
+  <div id="tab-houses" class="panel on">
+    <div class="card">
+      <div class="card-title">Your House Activations</div>
+      <div class="card-sub" id="houses-sub">The three lunar portals of May, personalised to your Rising Sign</div>
+      <div class="phase-strip" id="phase-strip"></div>
+      <table class="htable">
+        <thead><tr><th>House</th><th>Life Area</th><th>Lunar Event</th><th>What it activates for you</th></tr></thead>
+        <tbody id="house-tbody"></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">Moon Sign Journey</div>
+      <div class="card-sub">How the moon moves through May</div>
+      <div class="moon-list">
+        <div class="moon-item"><span class="moon-dates">May 1</span>Scorpio - depth, truth, transformation</div>
+        <div class="moon-item"><span class="moon-dates">May 2-4</span>Sagittarius - expansion, optimism</div>
+        <div class="moon-item"><span class="moon-dates">May 5-7</span>Capricorn - structure, ambition</div>
+        <div class="moon-item"><span class="moon-dates">May 8-9</span>Aquarius - community, innovation</div>
+        <div class="moon-item"><span class="moon-dates">May 10-11</span>Pisces - intuition, rest</div>
+        <div class="moon-item"><span class="moon-dates">May 13</span>Aries - action, initiative</div>
+        <div class="moon-item"><span class="moon-dates">May 15-16</span>Taurus - grounding, Supermoon</div>
+        <div class="moon-item"><span class="moon-dates">May 17</span>Gemini - communication, ideas</div>
+        <div class="moon-item"><span class="moon-dates">May 19-20</span>Cancer - nurturing, home</div>
+        <div class="moon-item"><span class="moon-dates">May 21-22</span>Leo - creativity, visibility</div>
+        <div class="moon-item"><span class="moon-dates">May 23-25</span>Virgo - precision, systems</div>
+        <div class="moon-item"><span class="moon-dates">May 25-27</span>Libra - balance, beauty</div>
+        <div class="moon-item"><span class="moon-dates">May 28-30</span>Scorpio - depth again</div>
+        <div class="moon-item"><span class="moon-dates">May 30-31</span>Sagittarius - Full Moon close</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Void of Course Moon</div>
+      <div class="card-sub">Pause before signing, launching, or deciding on these dates</div>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;line-height:1.65;">The Moon is between signs during these windows. Decisions made here tend not to go as planned. Use them for rest, reflection, and inner work.</p>
+      <div class="void-chips">
+        <span class="void-chip">May 2-3</span><span class="void-chip">May 4</span><span class="void-chip">May 7-8</span>
+        <span class="void-chip">May 10</span><span class="void-chip">May 12-13</span><span class="void-chip">May 14-15</span>
+        <span class="void-chip">May 17</span><span class="void-chip">May 17-19</span><span class="void-chip">May 20-21</span>
+        <span class="void-chip">May 21-23</span><span class="void-chip">May 25</span><span class="void-chip">May 27-28</span>
+        <span class="void-chip">May 30</span><span class="void-chip">May 31</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CEO PLAN -->
+  <div id="tab-ceo" class="panel">
+    <div class="card">
+      <div class="card-title">CEO Week by Week</div>
+      <div class="card-sub">Lunar cycle translated into strategic guidance, personalised to your Rising Sign</div>
+    </div>
+    <div id="weeks-list"></div>
+  </div>
+
+  <!-- DAILY GUIDE -->
+  <div id="tab-guide" class="panel">
+    <div class="card">
+      <div class="card-title">Daily Lunar Guide</div>
+      <div class="card-sub">The five key lunar moments of May, with personalised house context</div>
+      <p style="font-size:13px;color:var(--text-muted);line-height:1.65;">Each major phase is translated into the specific area of your life it illuminates, with guidance, a CEO micro-commitment, and a permission statement.</p>
+    </div>
+    <div id="guide-list"></div>
+  </div>
+
+  <!-- CALENDAR -->
+  <div id="tab-calendar" class="panel">
+    <div class="stats">
+      <div class="stat"><div class="sn">2</div><div class="sl">Full Moons</div></div>
+      <div class="stat"><div class="sn">1</div><div class="sl">Supermoon</div></div>
+      <div class="stat"><div class="sn">14</div><div class="sl">Void windows</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">May 2026</div>
+      <div class="card-sub">Lunar phases, moon signs and void windows</div>
+      <div class="cal-grid">
+        <div class="dh">Sun</div><div class="dh">Mon</div><div class="dh">Tue</div><div class="dh">Wed</div><div class="dh">Thu</div><div class="dh">Fri</div><div class="dh">Sat</div>
+        <div class="dc emp"></div><div class="dc emp"></div><div class="dc emp"></div><div class="dc emp"></div><div class="dc emp"></div>
+        <div class="dc fm" title="Full Moon in Scorpio"><span class="dn">1</span><span class="dp">Full Moon</span><span class="ds">Scorpio</span></div>
+        <div class="dc" title="Void Moon - Sagittarius"><span class="dn">2</span><span class="ds">Sagittarius</span><span class="dv">void</span></div>
+        <div class="dc" title="Void Moon - Sagittarius"><span class="dn">3</span><span class="ds">Sagittarius</span><span class="dv">void</span></div>
+        <div class="dc" title="Void Moon"><span class="dn">4</span><span class="ds">Sagittarius</span><span class="dv">void</span></div>
+        <div class="dc" title="Capricorn"><span class="dn">5</span><span class="ds">Capricorn</span></div>
+        <div class="dc" title="Capricorn"><span class="dn">6</span><span class="ds">Capricorn</span></div>
+        <div class="dc" title="Void Moon - Capricorn"><span class="dn">7</span><span class="ds">Capricorn</span><span class="dv">void</span></div>
+        <div class="dc" title="Void Moon - Aquarius"><span class="dn">8</span><span class="ds">Aquarius</span><span class="dv">void</span></div>
+        <div class="dc qm" title="Last Quarter - Aquarius"><span class="dn">9</span><span class="dp">Last Qtr</span><span class="ds">Aquarius</span></div>
+        <div class="dc" title="Void Moon - Pisces"><span class="dn">10</span><span class="ds">Pisces</span><span class="dv">void</span></div>
+        <div class="dc" title="Pisces"><span class="dn">11</span><span class="ds">Pisces</span></div>
+        <div class="dc" title="Void Moon - Aries"><span class="dn">12</span><span class="ds">Aries</span><span class="dv">void</span></div>
+        <div class="dc" title="Void Moon - Aries"><span class="dn">13</span><span class="ds">Aries</span><span class="dv">void</span></div>
+        <div class="dc" title="Void Moon - Taurus"><span class="dn">14</span><span class="ds">Taurus</span><span class="dv">void</span></div>
+        <div class="dc" title="Void Moon - Taurus"><span class="dn">15</span><span class="ds">Taurus</span><span class="dv">void</span></div>
+        <div class="dc nm sup" title="New Moon Supermoon - Taurus"><span class="dn">16</span><span class="dp">New Moon</span><span class="ds">Taurus</span></div>
+        <div class="dc" title="Void Moon - Gemini"><span class="dn">17</span><span class="ds">Gemini</span><span class="dv">void</span></div>
+        <div class="dc" title="Gemini"><span class="dn">18</span><span class="ds">Gemini</span></div>
+        <div class="dc" title="Void Moon - Cancer"><span class="dn">19</span><span class="ds">Cancer</span><span class="dv">void</span></div>
+        <div class="dc" title="Void Moon - Leo"><span class="dn">20</span><span class="ds">Leo</span><span class="dv">void</span></div>
+        <div class="dc" title="Void Moon - Leo"><span class="dn">21</span><span class="ds">Leo</span><span class="dv">void</span></div>
+        <div class="dc" title="Void Moon - Virgo"><span class="dn">22</span><span class="ds">Virgo</span><span class="dv">void</span></div>
+        <div class="dc qm" title="First Quarter - Virgo"><span class="dn">23</span><span class="dp">First Qtr</span><span class="ds">Virgo</span></div>
+        <div class="dc" title="Virgo"><span class="dn">24</span><span class="ds">Virgo</span></div>
+        <div class="dc" title="Void Moon - Libra"><span class="dn">25</span><span class="ds">Libra</span><span class="dv">void</span></div>
+        <div class="dc" title="Libra"><span class="dn">26</span><span class="ds">Libra</span></div>
+        <div class="dc" title="Void Moon - Scorpio"><span class="dn">27</span><span class="ds">Scorpio</span><span class="dv">void</span></div>
+        <div class="dc" title="Scorpio"><span class="dn">28</span><span class="ds">Scorpio</span></div>
+        <div class="dc" title="Scorpio"><span class="dn">29</span><span class="ds">Scorpio</span></div>
+        <div class="dc" title="Void Moon - Sagittarius"><span class="dn">30</span><span class="ds">Sagittarius</span><span class="dv">void</span></div>
+        <div class="dc fm" title="Full Moon in Sagittarius - Void Moon"><span class="dn">31</span><span class="dp">Full Moon</span><span class="ds">Sagittarius</span><span class="dv">void</span></div>
+        <div class="dc emp"></div><div class="dc emp"></div><div class="dc emp"></div><div class="dc emp"></div><div class="dc emp"></div><div class="dc emp"></div>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;">
+        <div style="display:flex;align-items:center;gap:5px;font-size:9px;color:var(--text-muted);"><div style="width:10px;height:10px;border-radius:2px;background:rgba(201,168,76,.09);border:1px solid rgba(201,168,76,.55);"></div>Full Moon</div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:9px;color:var(--text-muted);"><div style="width:10px;height:10px;border-radius:2px;background:rgba(42,127,138,.08);border:1px solid rgba(42,127,138,.55);"></div>New Moon</div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:9px;color:var(--text-muted);"><div style="width:10px;height:10px;border-radius:2px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.2);"></div>Quarter</div>
+        <div style="font-size:9px;color:#e08080;background:rgba(140,40,40,.22);border-radius:3px;padding:2px 6px;">void</div>
+      </div>
+    </div>
+    <div class="intention-box">
+      <div class="it">New Moon Taurus Supermoon - May 16</div>
+      <ul class="ip">
+        <li><span class="pn">1.</span>What are you ready to build that is solid, sustainable, and truly yours?</li>
+        <li><span class="pn">2.</span>Where have you been settling for less than your actual worth - in money, time, or energy?</li>
+        <li><span class="pn">3.</span>Write: I am building ______. I am releasing ______. I am claiming ______.</li>
+      </ul>
+    </div>
+    <div class="intention-box" style="background:rgba(192,96,32,.07);border-color:rgba(192,96,32,.25);margin-top:10px;">
+      <div class="it">Full Moon Sagittarius CEO Check-In - May 31</div>
+      <ul class="ip">
+        <li><span class="pn">1.</span>What did you actually build this month? Name it. Own it.</li>
+        <li><span class="pn">2.</span>What did the Scorpio Full Moon on May 1 reveal that you have now acted on?</li>
+        <li><span class="pn">3.</span>What bold direction is your business pointing toward - the one you have been circling?</li>
+      </ul>
+    </div>
+  </div>
+
+</div><!-- /main-app -->
+
+<div class="foot">
+  <div class="foot-brand">Cozy Astro for Life &amp; Business</div>
+  <div class="foot-note">May 2026</div>
+</div>
+</div><!-- /wrap -->
+
+<script>
+var sf=document.getElementById('sf');
+for(var i=0;i<120;i++){var s=document.createElement('div');s.className='star';var z=Math.random()*2+0.4;s.style.cssText='left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;width:'+z+'px;height:'+z+'px;--d:'+(3+Math.random()*5)+'s;--dl:'+Math.random()*5+'s;--op:'+(0.05+Math.random()*0.25)+';';sf.appendChild(s);}
+
+var SIGNS=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+function houseFor(rising,sign){return((SIGNS.indexOf(sign)-SIGNS.indexOf(rising)+12)%12)+1;}
+var HS={1:'Identity',2:'Money & Worth',3:'Communication',4:'Home & Roots',5:'Creativity & Joy',6:'Work & Health',7:'Partnerships',8:'Transformation',9:'Vision & Expansion',10:'Career & Visibility',11:'Community & Goals',12:'Inner Life & Rest'};
+var HN={1:'your identity and how you show up',2:'your money, self-worth and values',3:'your communication, writing and learning',4:'your home, roots and emotional foundation',5:'your creativity, joy and self-expression',6:'your daily work rhythms, health and systems',7:'your partnerships and key relationships',8:'your transformation and shared finances',9:'your expansion, vision and teaching',10:'your career and public visibility',11:'your community and long-term goals',12:'your inner life, rest and hidden patterns'};
+
+var PHASES=[
+  {date:'May 1',name:'Full Moon in Scorpio',sign:'Scorpio',
+   what:'The Full Moon illuminates the Scorpio area of your chart. What has been building since November 2025 reaches its culmination. Truths surface whether you invite them or not. This is the moment for honest reckoning - with your finances, your power dynamics, and what is truly complete.',
+   do:['Name what has reached its limit in this area of your life','Have the honest conversation you have been avoiding','Release a commitment, pattern, or dynamic that is no longer serving you'],
+   avoid:['Launching new initiatives - Full Moons mark endings, not beginnings','Suppressing what rises to the surface today','Impulsive decisions fuelled by emotional intensity'],
+   commit:'I audit what is complete and I release it with intention.',
+   permission:'I give myself permission to let go of what is finished, even if it feels scary.'},
+  {date:'May 9',name:'Last Quarter Moon in Aquarius',sign:'Aquarius',
+   what:'The Last Quarter Moon in Aquarius calls for a pause and consolidation before the New Moon reset. This is editing season - systems, commitments, and energetic leaks that no longer serve are ready to be released. The question is not what to start but what to stop.',
+   do:['Review your systems and workflows - what can be simplified or cut?','Consolidate rather than expand','Rest and restore in preparation for the New Moon portal on May 16'],
+   avoid:['Starting significant new projects before the New Moon','Forcing momentum when the energy naturally wants to slow','Making major decisions without the clarity the New Moon will bring'],
+   commit:'I review, refine, and release one thing that has been draining my energy.',
+   permission:'I give myself permission to slow down and let the work breathe.'},
+  {date:'May 16',name:'New Moon Supermoon in Taurus',sign:'Taurus',
+   what:'The most powerful intention portal of May - and one of the most significant of the year. A Supermoon New Moon in Taurus amplifies grounded, embodied intentions around what you are building for the long term. Taurus is the sign of sustainability, real-world results, and claiming your actual worth. What you plant here grows slowly and solidly for months.',
+   do:['Set your most important intention for this area of life - make it specific and embodied','Write your New Moon declaration: what you are building, releasing, and claiming','Create a physical anchor for your intention - something you can see or touch daily'],
+   avoid:['Void Moon May 14-15: do not sign contracts or make major launches just before the New Moon','Rushing the intention - Taurus rewards patience, not speed','Overextending financially in the excitement of the Supermoon energy'],
+   commit:'I write my New Moon declaration and commit to one concrete first step.',
+   permission:'I give myself permission to want what I want - without apologizing for it.'},
+  {date:'May 23',name:'First Quarter Moon in Virgo',sign:'Virgo',
+   what:'The First Quarter Moon in Virgo is the moment of action after the intention. This is not the time for more planning - it is the time to take the first concrete step. Virgo brings precision and craft. The invitation is to act with care and detail rather than perfectionism or paralysis.',
+   do:['Take the first concrete action on your New Moon intention - even one step matters','Apply Virgo attention to the detail and craft of what you are building','Organise and refine one key deliverable this week'],
+   avoid:['Perfectionism that prevents you from moving at all','Neglecting your health and physical rhythms - Virgo always calls you back to the body','Skipping the details in the rush to show results'],
+   commit:'I take one concrete, crafted action toward my New Moon intention.',
+   permission:'I give myself permission to take imperfect action and trust the momentum.'},
+  {date:'May 31',name:'Full Moon in Sagittarius',sign:'Sagittarius',
+   what:'The month closes with a Full Moon in Sagittarius - the sign of expansion, truth, and bold vision. This is a celebration moment and a completion moment simultaneously. What did you build this month? What arc did you travel? The Sagittarius Full Moon asks you to stand back, see the whole picture, and name where you are going next with genuine courage.',
+   do:['Celebrate what was built this month - do not skip this step','Share your vision publicly: Sagittarius energy rewards bold declarations','Review your entire May: what is now clear that was not clear on May 1?'],
+   avoid:['Overpromising or overcommitting in the excitement of the energy','Void Moon May 31: let the Full Moon fully land before taking your next action','Starting a new major project - honour the completion this Full Moon represents'],
+   commit:'I write my Full Moon CEO check-in: what I built, what surprised me, and what I am now ready to claim.',
+   permission:'I give myself permission to be proud of how far I have come - right now, exactly as I am.'}
+];
+
+var WEEKS=[
+  {id:'wk1',label:'Week 1 - May 1 to 4',theme:'Scorpio Full Moon: Surface what is hidden',moon:'Full Moon in Scorpio (May 1) then waning into Sagittarius',intensity:'High',badge:'badge-high',
+   mainSign:'Scorpio',
+   do:['Do a full revenue and energy audit: what is paying you AND costing you?','Have the conversation you have been putting off - the Full Moon energy supports truth','Name what is complete and begin the process of releasing it','Use Sagittarius energy May 3-4 to expand your perspective and vision'],
+   avoid:['Launching new offers - Full Moons mark culminations, not beginnings','Pretending everything is fine when it is not','Overcommitting during the Void Moon windows May 2-3 and May 4','Reactive decisions made from the emotional peak of the Full Moon'],
+   ceo:'Audit what you are actually building and why. What is profitable in soul AND bank account? Release whatever is neither.',
+   permission:'I give myself permission to let go of what is complete, even if it feels scary.'},
+  {id:'wk2',label:'Week 2 - May 5 to 11',theme:'Waning light: consolidate and release',moon:'Waning Gibbous then Last Quarter in Aquarius (May 9) then Pisces',intensity:'Medium',badge:'badge-med',
+   mainSign:'Aquarius',
+   do:['Review your systems, workflows, and automations - refine before relaunching','Consolidate rather than expand: this is editing season','Connect authentically with your community (Aquarius Last Quarter energy)','Rest and restore in preparation for the New Moon reset on May 16'],
+   avoid:['Major financial decisions during Void Moon May 7-8','Forcing creative flow when the energy naturally wants to slow','Isolating - this is a week for gentle collaborative energy','Ignoring the data your body is giving you about rest needs'],
+   ceo:'Review your last 30 days honestly. What worked? What did not? Refine one system before the New Moon reboot.',
+   permission:'I give myself permission to slow down and let the work breathe.'},
+  {id:'wk3',label:'Week 3 - May 12 to 18',theme:'Taurus Supermoon: Plant the seed',moon:'Waning Crescent then New Moon Supermoon in Taurus (May 16) then Waxing',intensity:'Very High',badge:'badge-vhigh',
+   mainSign:'Taurus',
+   do:['Set your most grounded embodied intentions on May 16 - make them specific and real','Start new financial habits, savings goals, or pricing reviews','Plant real seeds: Taurus loves tangible, physical anchors for intentions','Invest in beauty, comfort, and your physical environment'],
+   avoid:['Void Moon May 14-15: do not sign contracts or launch anything just before the New Moon','Rushing the New Moon energy - Taurus rewards patience, not speed','Overextending financially right after the Supermoon','Ignoring your body signals around rest and nourishment'],
+   ceo:'Write your New Moon CEO intention: one thing you are building, one releasing, one claiming as yours.',
+   permission:'I give myself permission to want what I want - without apologizing for it.'},
+  {id:'wk4',label:'Week 4 - May 19 to 25',theme:'First Quarter Virgo: Take decisive action',moon:'Waxing Crescent then Waxing Gibbous then First Quarter in Virgo (May 23)',intensity:'High',badge:'badge-high',
+   mainSign:'Virgo',
+   do:['Take the first concrete step on your New Moon intention - even one step matters','Apply Virgo attention: organise, detail, and perfect one key deliverable','Pitch, publish, or send - action wins this week','Refine your offer language or client communication with craft and precision'],
+   avoid:['Perfectionism that becomes paralysis - Virgo shadow','Void Moon May 20-23: hold major decisions during this extended window','Skipping the details - the details are the strategy this week','Neglecting your health and physical rhythms'],
+   ceo:'Identify the one action that, if you did it this week, would move your biggest goal forward. Do only that.',
+   permission:'I give myself permission to take imperfect action and trust the momentum.'},
+  {id:'wk5',label:'Week 5 - May 26 to 31',theme:'Sagittarius Full Moon: Celebrate and expand',moon:'Waxing Gibbous then Full Moon in Sagittarius (May 31) then Void Moon',intensity:'High',badge:'badge-high',
+   mainSign:'Sagittarius',
+   do:['Celebrate progress - Full Moons are specifically for witnessing wins, not minimising them','Share your vision publicly: Sagittarius rules bold expansive declarations','Connect with mentors, teachers, or inspiring communities','Review the whole month: what arc did you travel?'],
+   avoid:['Overpromising or overcommitting - Sagittarius shadow','Void Moon May 31: let the Full Moon fully land before acting','Starting new major projects - honour the completion energy','Ignoring what this month revealed about your direction'],
+   ceo:'Write your Full Moon CEO check-in: What did you build? What surprised you? What bold direction are you now ready to name?',
+   permission:'I give myself permission to be proud of how far I have come - right now, exactly as I am.'}
+];
+
+var HD={
+  Aries:[{h:8,e:'Full Moon Scorpio May 1',t:'Deep financial audit. Shared resources, debts, and intimate power dynamics reach a culmination. What are you owed and what do you owe - in money and in energy?'},{h:2,e:'New Moon Taurus May 16',t:'Powerful reset for your income, values, and self-worth. The most important intention portal of the year for what you earn and what you believe you deserve.'},{h:9,e:'Full Moon Sagittarius May 31',t:'Your big picture illuminates. A calling toward teaching, publishing, or a larger audience. Say yes to what expands your vision and reach.'}],
+  Taurus:[{h:7,e:'Full Moon Scorpio May 1',t:'Relationship truths surface. Business partnerships, contracts, and 1:1 dynamics reach a turning point. What is this relationship truly asking of you?'},{h:1,e:'New Moon Taurus May 16',t:'Your most powerful personal renewal portal of the year, amplified by the Supermoon. Begin the chapter of the truest, most embodied version of yourself.'},{h:8,e:'Full Moon Sagittarius May 31',t:'Financial entanglements, inherited patterns, or investment decisions come into full visibility. Expand your relationship with shared resources.'}],
+  Gemini:[{h:6,e:'Full Moon Scorpio May 1',t:'Your routines, health habits, and daily work systems are fully illuminated. What is secretly depleting you? What needs to be restructured at the roots?'},{h:12,e:'New Moon Taurus May 16',t:'Plant intentions in the invisible realm: behind-the-scenes work, rest, healing, and spiritual practice. What needs to gestate before it can emerge?'},{h:7,e:'Full Moon Sagittarius May 31',t:'Partnership expansion. A key relationship reaches a milestone or opens an entirely new chapter. Say yes to the collaboration that excites you.'}],
+  Cancer:[{h:5,e:'Full Moon Scorpio May 1',t:'Creative work, romance, and authentic self-expression reach a peak. What joy have you been denying yourself? What creative project is asking to be completed?'},{h:11,e:'New Moon Taurus May 16',t:'Plant intentions around your community, audience, and long-term goals. Who do you want to gather around your work, and what do you want to build together?'},{h:6,e:'Full Moon Sagittarius May 31',t:'Big-picture health and work rhythms illuminate. Expand your daily routine to include what truly sustains your body and your energy.'}],
+  Leo:[{h:4,e:'Full Moon Scorpio May 1',t:'Family, ancestry, home, and emotional foundations come to light. What in your roots is asking to be transformed? What does home truly mean to you now?'},{h:10,e:'New Moon Taurus May 16',t:'Career and public image reset. The most powerful professional intention portal of the year. What role do you want to step fully into in the world?'},{h:5,e:'Full Moon Sagittarius May 31',t:'Celebrate your creative expression. A project, love story, or creative chapter reaches a peak. Own the full brightness of what you have created.'}],
+  Virgo:[{h:3,e:'Full Moon Scorpio May 1',t:'Communications, writing, ideas, and how you share your thinking reach a culmination. What truth needs to be spoken or written? What message has been waiting?'},{h:9,e:'New Moon Taurus May 16',t:'Set intentions around teaching, publishing, travel, or philosophy. Your worldview is ready to expand in a direction that feels both grounded and bold.'},{h:4,e:'Full Moon Sagittarius May 31',t:'A home, family, or foundational chapter reaches completion. Celebrate how far your roots have grown and what solid ground you now stand on.'}],
+  Libra:[{h:2,e:'Full Moon Scorpio May 1',t:'Financial truths surface with full clarity. Income, values, and self-worth reach a reckoning. What are you truly worth, and are you charging accordingly?'},{h:8,e:'New Moon Taurus May 16',t:'Powerful portal for shared finances, investments, taxes, and deep personal transformation. What are you ready to claim from what belongs to you?'},{h:3,e:'Full Moon Sagittarius May 31',t:'Your voice expands. A writing, speaking, or communication project reaches a significant milestone. Share what you know more boldly and more widely.'}],
+  Scorpio:[{h:1,e:'Full Moon Scorpio May 1',t:'You are the Full Moon. A personal chapter reaches its peak. Who have you become over the last six months? Stand fully in that version of yourself.'},{h:7,e:'New Moon Taurus May 16',t:'New chapter in a key partnership - business or personal. Set the intentions for the relationships you want to build and the collaborations you want to invite in.'},{h:2,e:'Full Moon Sagittarius May 31',t:'Financial expansion. Your relationship with earning, self-worth, and what you value reaches a celebratory and clarifying peak.'}],
+  Sagittarius:[{h:12,e:'Full Moon Scorpio May 1',t:'What has been hidden - fears, unconscious patterns, past wounds - rises to be seen and released. This is deep inner-work territory. Let the healing happen.'},{h:6,e:'New Moon Taurus May 16',t:'Reset your daily routines, health practices, and work systems. Intention: sustainable rhythms that honour your body and your energy over the long term.'},{h:1,e:'Full Moon Sagittarius May 31',t:'You are the Full Moon. Your personal vision, identity, and presence reach full illumination. Celebrate who you have become and where you are going.'}],
+  Capricorn:[{h:11,e:'Full Moon Scorpio May 1',t:'Community, audience, and long-term goals reach a culmination. Which goals are truly aligned with who you are now? Which ones are ready to be released?'},{h:5,e:'New Moon Taurus May 16',t:'Plant seeds of joy, creative expression, play, and pleasure. Permission to build something that genuinely delights you - not just something productive.'},{h:12,e:'Full Moon Sagittarius May 31',t:'A cycle of inner work completes. Rest, retreat, and release what has needed to surface. The next chapter begins with what you let go of now.'}],
+  Aquarius:[{h:10,e:'Full Moon Scorpio May 1',t:'Public life and career reach a peak and turning point. What professional chapter is completing? What authority are you ready to step into or step away from?'},{h:4,e:'New Moon Taurus May 16',t:'Plant intentions for home, family, emotional foundation, and belonging. Ground yourself deeply in what is truly home - physically and emotionally.'},{h:11,e:'Full Moon Sagittarius May 31',t:'Your community and long-term vision expand. Celebrate the network you have built and the goals you have reached. Who do you want to grow with next?'}],
+  Pisces:[{h:9,e:'Full Moon Scorpio May 1',t:'A chapter of learning, teaching, or vision reaches its peak. What belief system has been quietly transforming? What truth have you been circling toward?'},{h:3,e:'New Moon Taurus May 16',t:'Set intentions around writing, speaking, learning, and how you communicate your message. How do you want your voice to reach people in the months ahead?'},{h:10,e:'Full Moon Sagittarius May 31',t:'Career expansion and public visibility peak. A professional milestone or achievement reaches full illumination. Own your success completely and openly.'}]
+};
+
+var currentRising=null;
+
+function selectRising(sign){
+  currentRising=sign;
+  var btns=document.querySelectorAll('.sign-btn');
+  for(var i=0;i<btns.length;i++){
+    btns[i].classList.remove('active');
+    if(btns[i].getAttribute('data-sign')===sign){btns[i].classList.add('active');}
+  }
+  document.getElementById('rising-screen').style.display='none';
+  document.getElementById('main-app').style.display='block';
+  document.getElementById('display-rising').textContent=sign;
+  renderHouses();
+  renderWeeks();
+  renderGuide();
+  showTab('houses');
+}
+
+function resetRising(){
+  currentRising=null;
+  document.getElementById('rising-screen').style.display='block';
+  document.getElementById('main-app').style.display='none';
+  var btns=document.querySelectorAll('.sign-btn');
+  for(var i=0;i<btns.length;i++){btns[i].classList.remove('active');}
+}
+
+function showTab(id){
+  var panels=document.querySelectorAll('.panel');
+  for(var i=0;i<panels.length;i++){panels[i].classList.remove('on');}
+  var tbs=document.querySelectorAll('.tb');
+  for(var i=0;i<tbs.length;i++){
+    tbs[i].classList.remove('on');
+    if(tbs[i].getAttribute('data-tab')===id){tbs[i].classList.add('on');}
+  }
+  document.getElementById('tab-'+id).classList.add('on');
+}
+
+function li(arr){var o='';for(var i=0;i<arr.length;i++){o+='<li>'+arr[i]+'</li>';}return o;}
+
+function renderHouses(){
+  var data=HD[currentRising];
+  var strip=document.getElementById('phase-strip');
+  strip.innerHTML='';
+  var phases=[
+    {date:'May 1',name:'Full Moon in Scorpio',sign:'Scorpio',idx:0},
+    {date:'May 16',name:'New Moon Supermoon in Taurus',sign:'Taurus',idx:1,isSuper:true},
+    {date:'May 31',name:'Full Moon in Sagittarius',sign:'Sagittarius',idx:2}
+  ];
+  for(var i=0;i<phases.length;i++){
+    var p=phases[i];
+    var d=data[p.idx];
+    var pill=document.createElement('div');
+    pill.className='phase-pill'+(p.isSuper?' super':'');
+    pill.innerHTML='<div class="pp-date">'+p.date+'</div><div class="pp-name">'+p.name+'</div><div class="pp-house">House '+d.h+' - '+HS[d.h]+'</div>';
+    strip.appendChild(pill);
+  }
+  var tbody=document.getElementById('house-tbody');
+  tbody.innerHTML='';
+  for(var i=0;i<data.length;i++){
+    var d=data[i];
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td class="h-num">H'+d.h+'</td><td class="h-area">'+HS[d.h]+'</td><td class="h-event">'+d.e+'</td><td class="h-theme">'+d.t+'</td>';
+    tbody.appendChild(tr);
+  }
+}
+
+function renderWeeks(){
+  var container=document.getElementById('weeks-list');
+  container.innerHTML='';
+  for(var i=0;i<WEEKS.length;i++){
+    var wk=WEEKS[i];
+    var h=houseFor(currentRising,wk.mainSign);
+    var houseCtx='This week the main lunar energy moves through House '+h+' of your chart - '+HN[h]+'. Let that awareness colour how you apply the guidance below.';
+    var card=document.createElement('div');
+    card.className='week-card';
+    card.id=wk.id;
+    var header=document.createElement('div');
+    header.className='wk-header';
+    header.innerHTML='<div><div class="wk-label">'+wk.label+'</div><div class="wk-theme">'+wk.theme+'</div><div class="wk-moon">'+wk.moon+'</div></div><div style="display:flex;align-items:center;"><span class="wk-badge '+wk.badge+'">'+wk.intensity+'</span><span class="wk-chevron">v</span></div>';
+    header.addEventListener('click',function(){this.parentElement.classList.toggle('open');});
+    var body=document.createElement('div');
+    body.className='wk-body';
+    body.innerHTML='<div class="wk-house-ctx">'+houseCtx+'</div><div class="da"><div class="do-b"><div class="box-lbl">Do</div><ul class="da-list">'+li(wk.do)+'</ul></div><div class="av-b"><div class="box-lbl">Avoid</div><ul class="da-list">'+li(wk.avoid)+'</ul></div></div><div class="ceo-mv"><div class="ceo-lbl">CEO Move</div><div class="ceo-txt">'+wk.ceo+'</div></div><div class="wk-perm"><em>"'+wk.permission+'"</em></div>';
+    card.appendChild(header);
+    card.appendChild(body);
+    container.appendChild(card);
+  }
+}
+
+function renderGuide(){
+  var container=document.getElementById('guide-list');
+  container.innerHTML='';
+  for(var i=0;i<PHASES.length;i++){
+    var p=PHASES[i];
+    var h=houseFor(currentRising,p.sign);
+    var card=document.createElement('div');
+    card.className='day-card';
+    card.innerHTML='<div class="day-date">'+p.date+'</div><div class="day-phase">'+p.name+'</div><div class="day-house">For '+currentRising+' Rising: House '+h+' - '+HS[h]+' - '+HN[h]+'</div><div class="day-guidance">'+p.what+'</div><div class="da"><div class="do-b"><div class="box-lbl">Do</div><ul class="da-list">'+li(p.do)+'</ul></div><div class="av-b"><div class="box-lbl">Avoid</div><ul class="da-list">'+li(p.avoid)+'</ul></div></div><div class="day-commit">CEO micro-commitment: '+p.commit+'</div><div class="day-perm">'+p.permission+'</div>';
+    container.appendChild(card);
+  }
+}
+</script>
+</body>
+</html>
